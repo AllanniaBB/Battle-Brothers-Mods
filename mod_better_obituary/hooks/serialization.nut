@@ -16,18 +16,19 @@
 	
         ::BetterObituary.Mod.Serialization.flagSerialize("BetterObituary", extendedFallenData, this.getFlags());
 		
-        onSerialize(_out); // call original function
+        onSerialize(_out);
     }
 	
     local onDeserialize = o.onDeserialize;
     o.onDeserialize = function ( _in ) 
 	{
-        onDeserialize(_in); // call original function
+        onDeserialize(_in);
 		
         local data = ::BetterObituary.Mod.Serialization.flagDeserialize("BetterObituary", [], null, this.getFlags());
 		
-        if (data.len() == 0) {
-            ::logInfo("Better Obituary: No mod data found in save (vanilla save)");
+        if (data.len() == 0) 
+		{
+            //::logInfo("Better Obituary: No mod data found in save (vanilla save)");
             return;
         }
 		

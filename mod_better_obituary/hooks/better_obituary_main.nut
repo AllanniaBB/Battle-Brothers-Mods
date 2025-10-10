@@ -1,4 +1,3 @@
-// Hook into tactical state to modify gatherBrothers behavior
 ::mods_hookNewObject("states/tactical_state", function(o) 
 {
 	local oldGatherBrothers = o.gatherBrothers;
@@ -75,7 +74,6 @@
 	};
 });
 
-// Hook player entity to add getDeadTraits and override onDeath
 ::mods_hookNewObject("entity/tactical/player", function(o) 
 {
 
@@ -87,7 +85,7 @@
 		foreach (i, s in skills) 
 		{
 	
-		::logInfo("Better Obituary: getDeadTraits = " + this.Const.SkillType);
+		//::logInfo("Better Obituary: getDeadTraits = " + this.Const.SkillType);
 		
 			if (s.isType(this.Const.SkillType.StatusEffect) ||
 				s.isType(this.Const.SkillType.Active) ||
@@ -121,7 +119,7 @@
 		foreach (i, s in skills) 
 		{
 		
-		::logInfo("Better Obituary: getDeadPermanentInjury = " + s);
+		//::logInfo("Better Obituary: getDeadPermanentInjury = " + s);
 		
 			if (s.isType(this.Const.SkillType.StatusEffect) ||
 				s.isType(this.Const.SkillType.Active) ||
@@ -212,13 +210,11 @@
 			];
 		}
 
-		return tooltip; // fallback to original if no match
+		return tooltip;
 	}
 
 	o.onQueryUIElementTooltipData = function(_entityId, _elementId, _elementOwner) 
 	{
-
-		// Call original function
 		local tooltip = original_onQueryUIElementTooltipData(_entityId, _elementId, _elementOwner);
 
 		// Extend tooltip and use the returned value
