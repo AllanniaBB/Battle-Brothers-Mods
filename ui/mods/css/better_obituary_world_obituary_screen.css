@@ -1,0 +1,164 @@
+:root {
+    --icon-size: 2.6rem;
+    --header-icon-size: 2.5rem;
+}
+
+
+.world-obituary-screen > .l-obituary-dialog-container
+{
+    top: 0;
+    left: 5rem;
+    right: 0;
+    bottom: 0;
+    width: 171.0rem;
+    height: 76.8rem;
+    position: absolute;
+    margin: auto;
+    z-index: 2;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .l-tab-container
+{
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 128.0rem;
+    height: 3.0rem;
+    position: absolute;
+    margin: auto;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .name, .time, .battles, .kills, .killed-by, .level {
+    position: absolute;
+    top: 0;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-name      { left: 2.5rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-time      { left: 33rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-battles   { left: 38rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-kills     { left: 43rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-killed-by { left: 50rem; }
+
+/* New columns */
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-level,
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-traits,
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-perminjuries,
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-stats {
+    position: absolute;
+    top: 0;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .table-header 
+.table-header-traits,
+.table-header-perminjuries {
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
+.table-header-level     { left: 86.0rem; }
+.table-header-traits    { left: 91.0rem; }
+.table-header-perminjuries { left: 105.5rem; }
+.table-header-stats     { left: 134.0rem; }
+ /* New columns */
+  
+.world-obituary-screen > .l-obituary-dialog-container .content > .column
+{
+    width: 100%;
+    height: 100%;
+    padding-top: 0.0rem;
+    padding-bottom: 0.9rem;
+	padding-left: 1.0rem;
+	padding-right: 1.0rem;
+    position: relative;
+    float : left;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .name,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .time,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .battles,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .kills,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .killed-by,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .level {
+    position: absolute;
+    top: 0.0rem;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .name { left: 2.0rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .time { left: 32.5rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .battles { left: 37.5rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .kills { left: 42.5rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .killed-by { left: 49.8rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .level { left: 86.0rem; }
+
+
+ /* New columns */
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .trait1 > img,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .trait2 > img,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .trait3 > img,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .trait4 > img,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .perminjury1 > img,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .perminjury2 > img,
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .perminjury3 > img {
+    top: 0;
+    position: absolute;
+    width: 2.6rem;
+    height: 2.6rem;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .trait1 > img { left: 89.5rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .trait2 > img { left: 93.0rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .trait3 > img { left: 95.8rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .trait4 > img { left: 98.6rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .perminjury1 > img { left: 102.5rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .perminjury2 > img { left: 105.3rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .perminjury3 > img { left: 108.1rem; }
+ /* New columns */
+
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .stats {
+    left: 100rem;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row 
+.hpicon > img, .fticon > img, .bricon > img, .iticon > img, 
+.maicon > img, .raicon > img, .mdicon > img, .rdicon > img {
+    top: 0;
+    position: absolute;
+    width: 2.6rem;
+    height: 2.6rem;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .hpicon > img { left: 113rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .fticon > img { left: 120rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .bricon > img { left: 127rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .iticon > img { left: 134rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .maicon > img { left: 141rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .raicon > img { left: 148rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .mdicon > img { left: 154.6rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .rdicon > img { left: 161.2rem; }
+
+.hptext, .fttext, .brtext, .ittext, .matext, .ratext, .mdtext, .rdtext {
+    position: absolute;
+    top: 0;
+    width: auto;
+    display: flex;
+    align-items: center;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .hptext { left: 113rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .fttext { left: 120rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .brtext { left: 127rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .ittext { left: 134rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .matext { left: 141rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .ratext { left: 148rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .mdtext { left: 154.6rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .rdtext { left: 161.2rem; }
+
+ /* New header icons */
+img.header-icon {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    display: inline-block !important;
+    object-fit: contain !important;
+    image-rendering: pixelated !important;
+}
