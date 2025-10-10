@@ -1,2 +1,1 @@
-Credits
-chopeks from the legends discord (a far better coder than myself) 
+Credits to chopeks from the legends discord (a far better coder than myself) 
