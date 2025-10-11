@@ -4,9 +4,9 @@ mod_armour_indicators
 - Vanilla: v1.5.1.7
 - Legends: v19.1.47
 	
-mod_better_combat_log_bigger,
-mod_better_combat_log_small,
-mod_better_combat_log_vanilla
+mod_better_combat_log_bigger<br/>
+mod_better_combat_log_small<br/>
+mod_better_combat_log_vanilla<br/>
 - Status: Initial update - No known issues, but could do with addiitons (in-game setting to choose starts expanded, size, etc, instead of seperate almost identical versions)
 - Last tested: 5/10/2025
 - Vanilla: v1.5.1.7
@@ -18,7 +18,7 @@ mod_better_hit_information
 - Vanilla: v1.5.1.7
 - Legends: edundant, legends has it's own equivalent (and probably better) implementation.
 
-mod_better_obituary-3.3-alt,
+mod_better_obituary-3.3-alt<br/>
 mod_better_obituary-3.3-main
 - Status: Updated (complete rework) - No known issues.
 - Last tested: 5/10/2025
