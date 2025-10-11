@@ -4,8 +4,8 @@ mod_armour_indicators
 - Vanilla: v1.5.1.7
 - Legends: v19.1.47
 	
-mod_better_combat_log_bigger
-mod_better_combat_log_small
+mod_better_combat_log_bigger,
+mod_better_combat_log_small,
 mod_better_combat_log_vanilla
 - Status: Initial update - No known issues, but could do with addiitons (in-game setting to choose starts expanded, size, etc, instead of seperate almost identical versions)
 - Last tested: 5/10/2025
