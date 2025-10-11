@@ -1,0 +1,16 @@
+.tooltip-module
+{
+	max-width: 24.0rem;
+    width: 24.0rem;
+
+	padding  : 0.6rem;
+    padding-bottom: 1.0rem;
+	position : absolute;
+	
+	overflow: hidden;
+	/*pointer-events: none;*/
+
+    background-image: url("coui://gfx/ui/skin/tooltip_255_bottom.png");
+    background-size: 25.5rem 80.0rem;
+    background-position: bottom;
+}

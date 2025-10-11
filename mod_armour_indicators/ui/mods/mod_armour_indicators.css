@@ -1,0 +1,37 @@
+.ui-control.brother > .asset-layer .head-status-container
+{
+    width: 2.7rem;
+    height: 3.0rem;
+	position: absolute;
+    float: left;
+	margin-top: 3.9rem;
+    margin-left: 4.6rem;
+}
+
+.ui-control.brother > .asset-layer .head-status-container img 
+{
+    width: 2.5rem;
+    height: 2.5rem;
+    float: left;
+    display: block;
+    position: relative;
+}
+
+.ui-control.brother > .asset-layer .armor-status-container
+{
+    width: 2.7rem;
+    height: 3.0rem;
+	position: absolute;
+    float: left;
+	margin-top: 5.7rem;
+    margin-left: 4.6rem;
+}
+
+.ui-control.brother > .asset-layer .armor-status-container img 
+{
+    width: 2.5rem;
+    height: 2.5rem;
+    float: left;
+    display: block;
+    position: relative;
+}

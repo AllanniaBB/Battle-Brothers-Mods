@@ -1,0 +1,6 @@
+.tactical-screen .topbar-event-log-module .ui-control.list
+{
+    background-image: url("coui://gfx/ui/skin/combat_log_bottom.png");
+    background-size: 28.6rem 84rem;
+    background-repeat: no-repeat;
+}
