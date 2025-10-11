@@ -21,7 +21,7 @@
 <b>Status:</b> 🟢 Updated (complete rework) - No known issues.<br>
 <b>Last tested:</b> 5/10/2025<br>
 <b>Vanilla:</b> v1.5.1.7<br>
-<b>Legends:</b> 🟣 Incorporated into Legends (pre-3.0 changes), but Legends needs updating for newest changes.
+<b>Legends:</b> 🔵 Incorporated into Legends (pre-3.0 changes), but Legends needs updating for newest changes.
 <br>
 <h3>mod_detailed_status_effects</h3>
 <p>
