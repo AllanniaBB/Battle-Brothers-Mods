@@ -18,7 +18,7 @@ mod_better_hit_information
 - Vanilla: v1.5.1.7
 - Legends: edundant, legends has it's own equivalent (and probably better) implementation.
 
-mod_better_obituary-3.3-alt
+mod_better_obituary-3.3-alt,
 mod_better_obituary-3.3-main
 - Status: Updated (complete rework) - No known issues.
 - Last tested: 5/10/2025
