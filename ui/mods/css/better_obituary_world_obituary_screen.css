@@ -1,0 +1,163 @@
+.perminjury-group {
+    position: absolute;
+    top: 0;
+    left: 101.7rem;
+    width: 8.6rem;
+    height: 2.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.perminjury-group img {
+    width: 2.6rem;
+    height: 2.6rem;
+    object-fit: contain;
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container {
+    position: absolute;
+    top: 0;
+    left: 5rem;
+    right: 0;
+    bottom: 0;
+    width: 169.5rem;
+    height: 76.8rem;
+    margin: auto;
+    z-index: 2;
+	//background: red; // Debug colouring
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .l-tab-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 128rem;
+    height: 3rem;
+    margin: auto;
+	//background: blue; // Debug colouring
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .content > .column {
+    width: 100%;
+    height: 100%;
+    padding-top: 2.0rem;
+    padding-bottom: 0.9rem;
+	padding-left: 1.0rem;
+	padding-right: 1.0rem;
+    position: relative;
+    float : left;
+    //background: yellow; // Debug colouring
+}
+
+/* stat text fields */
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row
+.hptext, .fttext, .brtext, .ittext, .matext, .ratext, .mdtext, .rdtext {
+    position: absolute;
+    top: 0;
+    width: 6.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    text-align: right;
+    //background: blue; // Debug colouring
+}
+
+/* stat icons */
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row
+.hptext img, .fttext img, .brtext img, .ittext img, .matext img, .ratext img, .mdtext img, .rdtext img {
+    width: 2.6rem;
+    height: 2.6rem;
+    object-fit: contain;
+    flex-shrink: 0;
+	//background: red; // Debug colouring
+}
+
+/* taits (background + 4 traits), stats */
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row
+.trait1 > img, .trait2 > img, .trait3 > img, .trait4 > img, .trait5 > img,
+.hpicon > img, .fticon > img, .bricon > img, .iticon > img,
+.maicon > img, .raicon > img, .mdicon > img, .rdicon > img {
+    position: absolute;
+    top: 0;
+    width: 2.6rem;
+    height: 2.6rem;
+	//background: green; // Debug colouring
+}
+
+/* trait icons */
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row
+.trait1 > img { left: 86.5rem; }
+.trait2 > img { left: 90rem; }
+.trait3 > img { left: 92.8rem; }
+.trait4 > img { left: 95.6rem; }
+.trait5 > img { left: 98.4rem; }
+
+/* stat text */
+.hptext { left: 111rem; width: 5.5rem; }
+.fttext { left: 118rem; width: 5.5rem; }
+.brtext { left: 125rem; width: 5.5rem; }
+.ittext { left: 132rem; width: 5.5rem; }
+.matext { left: 139rem; width: 5.5rem; }
+.ratext { left: 146rem; width: 5.5rem; }
+.mdtext { left: 152.6rem; width: 5.5rem; }
+.rdtext { left: 159.2rem; width: 5.5rem; }
+
+/* other text elements */
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row
+.name, .time, .battles, .kills, .killed-by, .level {
+    position: absolute;
+    top: 0;
+}
+
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .name { left: 2rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .time { left: 29.7rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .battles { left: 34.7rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .kills { left: 39.7rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .killed-by { left: 46.4rem; }
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .level { left: 81.7rem; }
+
+/* header positions */
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-name      { left: 2.5rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-time      { left: 31rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-battles   { left: 36rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-kills     { left: 41rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-killed-by { left: 46.6rem; }
+
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-level       { position: absolute; top: 0; left: 83rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-traits      { position: absolute; top: 0; left: 88rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-perminjuries{ position: absolute; top: 0; left: 105.4rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-hp          { position: absolute; top: 0; left: 112.35rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-ft          { position: absolute; top: 0; left: 119.1rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-br          { position: absolute; top: 0; left: 126.0rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-it          { position: absolute; top: 0; left: 133.15rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-ma          { position: absolute; top: 0; left: 140.2rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-ra          { position: absolute; top: 0; left: 147.15rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-md          { position: absolute; top: 0; left: 153.7rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-rd          { position: absolute; top: 0; left: 160.2rem; }
+
+
+/* Time, battles, kills, level text */
+.world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row
+.time, .battles, .kills, .level {
+    width: 3.5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	//background: white; // Debug colouring
+}
+
+/* Header icons */
+img.header-icon {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    display: inline-block !important;
+    object-fit: contain !important;
+    image-rendering: pixelated !important;
+}
