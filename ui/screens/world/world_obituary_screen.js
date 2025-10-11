@@ -10,6 +10,10 @@
  */
 "use strict";
 
+var num_traits = 5;
+var num_perminjuries = 3;
+var num_stats = 8;
+
 var WorldObituaryScreen = function(_parent)
 {
 	this.mSQHandle = null;
@@ -88,7 +92,7 @@ WorldObituaryScreen.prototype.createDIV = function (_parentDiv)
     headers.append(this.mColumnName);
 
     //this.mColumnTime = $('<div class="table-header-time title title-font-big font-bold font-color-title">Days</div>');
-	this.mColumnTime = $('<div class="table-header-time title title-font-big font-bold font-color-title">\
+	this.mColumnTime = $('<div class="table-header-time">\
     <img class="header-icon" src="' + Path.GFX + 'ui/images/day_time.png"></div>');
     headers.append(this.mColumnTime);
 
@@ -98,11 +102,11 @@ WorldObituaryScreen.prototype.createDIV = function (_parentDiv)
     headers.append(this.mColumnBattles);
 
     //this.mColumnKills = $('<div class="table-header-kills title title-font-big font-bold font-color-title">Kills</div>');
-	this.mColumnKills = $('<div class="table-header-kills title title-font-big font-bold font-color-title">\
+	this.mColumnKills = $('<div class="table-header-kills">\
     <img class="header-icon" src="' + Path.GFX + 'ui/icons/obituary_kills.png"></div>');
     headers.append(this.mColumnKills);
 
-    this.mColumnKilledBy = $('<div class="table-header-killed-by title title-font-big font-bold font-color-title">Departure</div>');
+    this.mColumnKilledBy = $('<div class="table-header-killed-by title title-font-big font-bold font-color-title">Fate</div>');
     headers.append(this.mColumnKilledBy);
 
     this.mLevel = $('<div class="table-header-level title title-font-big font-bold font-color-title">Lv</div>');
@@ -112,7 +116,7 @@ WorldObituaryScreen.prototype.createDIV = function (_parentDiv)
     headers.append(this.mTraits);
 
     //this.mPermInjuries = $('<div class="table-header-perminjuries title title-font-big font-bold font-color-title">PermInjuries</div>');
-	this.mPermInjuries = $('<div class="table-header-perminjuries title title-font-big font-bold font-color-title">\
+	this.mPermInjuries = $('<div class="table-header-perminjuries">\
     <img class="header-icon" src="' + Path.GFX + 'ui/icons/days_wounded.png"></div>');
     headers.append(this.mPermInjuries);
 
@@ -250,15 +254,15 @@ WorldObituaryScreen.prototype.addListEntry = function (_data)
 			
 			var stats = [hptext,fttext,brtext,ittext,matext,ratext,mdtext,rdtext];
 			var talents = [];
-			for(var i=0; i< 8; i++)
+			for(var i=0; i< num_stats; i++)
 			{
 				talents.push(_data.talents[i])
 				stats[i].append(_data.stats[i]);
 				
-				var talent0 = $('<img/>').attr('src', Path.GFX + 'ui/icons/talent_0.png');
-				var talent1 = $('<img/>').attr('src', Path.GFX + 'ui/icons/talent_1.png');
-				var talent2 = $('<img/>').attr('src', Path.GFX + 'ui/icons/talent_2.png');
-				var talent3 = $('<img/>').attr('src', Path.GFX + 'ui/icons/talent_3_stacked.png');
+				var talent0 = $('<img/>').attr('src', Path.GFX + 'ui/icons/BO_talent_0.png');
+				var talent1 = $('<img/>').attr('src', Path.GFX + 'ui/icons/BO_talent_1.png');
+				var talent2 = $('<img/>').attr('src', Path.GFX + 'ui/icons/BO_talent_2.png');
+				var talent3 = $('<img/>').attr('src', Path.GFX + 'ui/icons/BO_talent_3.png');
 				
 				var stars = [talent0,talent1,talent2,talent3]
 				
@@ -266,8 +270,8 @@ WorldObituaryScreen.prototype.addListEntry = function (_data)
 			}
 		}
 		
-		var traiticons = [$('<div class=trait1>'),$('<div class=trait2>'),$('<div class=trait3>'),$('<div class=trait4>')];
-		for(var i=0; i< 4; i++)
+		var traiticons = [$('<div class=trait1>'),$('<div class=trait2>'),$('<div class=trait3>'),$('<div class=trait4>'),$('<div class=trait5>')];
+		for(var i=0; i< num_traits; i++)
 		{
 			if(_data.traits[i] != "") 
 			{
@@ -275,16 +279,18 @@ WorldObituaryScreen.prototype.addListEntry = function (_data)
 				traiticons[i].append(trait); result.append(traiticons[i]);
 			}
 		}
-		
-		var perminjuriesicons = [$('<div class=perminjury1>'),$('<div class=perminjury2>'),$('<div class=perminjury3>'),$('<div class=perminjury4>')];
-		for(var i=0; i< 3; i++)
-		{
-			if(_data.perminjuries[i] != "") 
-			{
-				var perminjuries = $('<img/>').attr('src', Path.GFX + _data.perminjuries[i]);
-				perminjuriesicons[i].append(perminjuries); result.append(perminjuriesicons[i]);
+
+		var perminjuryGroup = $('<div class="perminjury-group"></div>');
+
+		for (var i = 0; i < num_perminjuries; i++) {
+			if (_data.perminjuries[i] !== "") {
+				var perminjury = $('<img/>').attr('src', Path.GFX + _data.perminjuries[i]);
+				perminjuryGroup.append(perminjury);
 			}
 		}
+
+
+		result.append(perminjuryGroup); // Append flex container to the row
 	}
 };
 

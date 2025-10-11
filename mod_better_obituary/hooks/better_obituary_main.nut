@@ -195,10 +195,10 @@
 	function extendTooltipData(tooltip, _entityId, _elementId, _elementOwner) 
 	{
 		local tooltipMap = {
-			"world-screen.obituary.Level": ["Level", "The level the character was upon their demise."],
-			"world-screen.obituary.Traits": ["Traits", "The background and traits the character had upon their demise."],
-			"world-screen.obituary.PermInjuries": ["Permanent Injuries", "The permanent injuries the character had upon their demise."],
-			"world-screen.obituary.Stats": ["Stats", "The base stats the character had upon their demise."]
+			"world-screen.obituary.Level": ["Level", "The level the character was upon meeting their fate."],
+			"world-screen.obituary.Traits": ["Traits", "The background and traits the character had upon meeting their fate."],
+			"world-screen.obituary.PermInjuries": ["Permanent Injuries", "The permanent injuries the character had upon meeting their fate."],
+			"world-screen.obituary.Stats": ["Stats", "The base stats the character had upon meeting their fate."]
 		};
 
 		if (_elementId in tooltipMap) 
