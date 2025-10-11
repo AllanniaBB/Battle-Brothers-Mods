@@ -25,7 +25,7 @@
 <br>
 <h3>mod_detailed_status_effects</h3>
 <p>
-<b>Status:</b> Initial update - No issues, but could do with re-working and expanding. Alternatively, mods like Tactical Tooltip exist, so this might be entirely redundant now.<br>
+<b>Status:</b> Initial update - No known issues, but could do with re-working and expanding. Alternatively, mods like Tactical Tooltip exist, so this might be entirely redundant now.<br>
 <b>Last tested:</b> 5/10/2025<br>
 <b>Vanilla:</b> v1.5.1.7<br>
 <b>Legends:</b> TBD (it seems to work, but Legends has its own extensive UI changes and I haven't played it much).
