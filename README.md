@@ -1,50 +1,53 @@
-mod_armour_indicators
-- Status: Initial update - No known issues.
-- Last tested: 5/10/2025
-- Vanilla: v1.5.1.7
-- Legends: v19.1.47
-	
-mod_better_combat_log_bigger<br/>
-mod_better_combat_log_small<br/>
-mod_better_combat_log_vanilla<br/>
-- Status: Initial update - No known issues, but could do with addiitons (in-game setting to choose starts expanded, size, etc, instead of seperate almost identical versions)
-- Last tested: 5/10/2025
-- Vanilla: v1.5.1.7
-- Legends: TBD (seems to work, but legends touches almost everything and I haven't played it much. Update: Resized log will not apply to legends)
-
-mod_better_hit_information
-- Status: Initial update - No known issues, but could do with re-working and expanding. Alternatively, mods like Tactical hit factors exist, so this might be entirely redundant now. 
-- Last tested: 5/10/2025
-- Vanilla: v1.5.1.7
-- Legends: edundant, legends has it's own equivalent (and probably better) implementation.
-
-mod_better_obituary-3.3-alt<br/>
-mod_better_obituary-3.3-main
-- Status: Updated (complete rework) - No known issues.
-- Last tested: 5/10/2025
-- Vanilla: v1.5.1.7
-- Legends: incorperated into legends (pre-3.0 changes), but legends needs updaing for newest changes.
-	
-mod_detailed_status_effects
-- Status: Initial update - No issues, but could do with re-working and expanding. Alternatively, mods like Tactical Tooltip exist, so this might be entirely redundant now. 
-- Last tested: 5/10/2025
-- Vanilla: v1.5.1.7
-- Legends: TBD (it seems to work, but legends has it's own extensive UI changes and I haven't played it much).
-
-mod_higher_stakes_gambling
-- Status: Updated - No known issues (only touches one event, so unsurprising).
-- Last tested: 5/10/2025
-- Vanilla: v1.5.1.7
-- Legends: v19.1.47
-	
-mod_show_base_inventory_stats
-- Status: Updated - No known issues.
-- Last tested: 5/10/2025
-- Vanilla: v1.5.1.7
-- Legends: v19.1.47
-
-mod_show_enemy_stats
-- Status: Updated - No known issues (very simple mod, so unsurprising).
-- Last tested: 5/10/2025
-- Vanilla: v1.5.1.7
-- Legends: v19.1.47
+<h3>mod_armour_indicators</h3>
+<b>Status:</b> Initial update - No known issues.<br>
+<b>Last tested:</b> 5/10/2025<br>
+<b>Vanilla:</b> v1.5.1.7<br>
+<b>Legends:</b> v19.1.47
+<br>
+<h3>mod_better_combat_log (bigger, smaller, vanilla)</h3>
+<b>Status:</b> Initial update - No known issues, but could do with additions (in-game setting to choose starts expanded, size, etc, instead of separate almost identical versions)<br>
+<b>Last tested:</b> 5/10/2025<br>
+<b>Vanilla:</b> v1.5.1.7<br>
+<b>Legends:</b> TBD (seems to work, but Legends touches almost everything and I haven't played it much. <b>Update:</b> Resized log will not apply to Legends)
+<br>
+<h3>mod_better_hit_information</h3>
+<b>Status:</b> Initial update - No known issues, but could do with re-working and expanding. Alternatively, mods like Tactical hit factors exist, so this might be entirely redundant now.<br>
+<b>Last tested:</b> 5/10/2025<br>
+<b>Vanilla:</b> v1.5.1.7<br>
+<b>Legends:</b> Redundant, Legends has its own equivalent (and probably better) implementation.
+<br>
+<h3>mod_better_obituary-3.3 (main, alt)</h3>
+<p>
+<b>Status:</b> Updated (complete rework) - No known issues.<br>
+<b>Last tested:</b> 5/10/2025<br>
+<b>Vanilla:</b> v1.5.1.7<br>
+<b>Legends:</b> Incorporated into Legends (pre-3.0 changes), but Legends needs updating for newest changes.
+<br>
+<h3>mod_detailed_status_effects</h3>
+<p>
+<b>Status:</b> Initial update - No issues, but could do with re-working and expanding. Alternatively, mods like Tactical Tooltip exist, so this might be entirely redundant now.<br>
+<b>Last tested:</b> 5/10/2025<br>
+<b>Vanilla:</b> v1.5.1.7<br>
+<b>Legends:</b> TBD (it seems to work, but Legends has its own extensive UI changes and I haven't played it much).
+<br>
+<h3>mod_higher_stakes_gambling</h3>
+<p>
+<b>Status:</b> Updated - No known issues (only touches one event, so unsurprising).<br>
+<b>Last tested:</b> 5/10/2025<br>
+<b>Vanilla:</b> v1.5.1.7<br>
+<b>Legends:</b> v19.1.47
+<br>
+<h3>mod_show_base_inventory_stats</h3>
+<p>
+<b>Status:</b> Updated - No known issues.<br>
+<b>Last tested:</b> 5/10/2025<br>
+<b>Vanilla:</b> v1.5.1.7<br>
+<b>Legends:</b> v19.1.47
+<br>
+<h3>mod_show_enemy_stats</h3>
+<p>
+<b>Status:</b> Updated - No known issues (very simple mod, so unsurprising).<br>
+<b>Last tested:</b> 5/10/2025<br>
+<b>Vanilla:</b> v1.5.1.7<br>
+<b>Legends:</b> v19.1.47
+</p>
