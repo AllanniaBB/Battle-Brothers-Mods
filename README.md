@@ -16,7 +16,7 @@
 <b>Vanilla:</b> v1.5.1.7<br>
 <b>Legends:</b> 🟣 Redundant, Legends has its own equivalent (and probably better) implementation.
 <br>
-<h3><a href="https://www.nexusmods.com/battlebrothers/mods/108">mod_better_obituary‑3.3 (main, alt)</a></h3>
+<h3><a href="https://www.nexusmods.com/battlebrothers/mods/108">mod_better_obituary</a></h3>
 <p>
 <b>Status:</b> 🟢 Updated (complete rework) - No known issues.<br>
 <b>Last tested:</b> 5/10/2025<br>
