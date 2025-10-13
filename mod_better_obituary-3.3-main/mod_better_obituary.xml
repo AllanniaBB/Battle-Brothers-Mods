@@ -1,9 +1,0 @@
-<mod>
-    <id>mod_better_obituary</id>
-    <name>Better Obituary</name>
-    <version>2.0.0</version>
-    <build>Test</build>
-    <dependencies>
-        <dependency>mod_msu</dependency>
-    </dependencies>
-</mod>
