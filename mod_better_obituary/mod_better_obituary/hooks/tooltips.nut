@@ -1,8 +1,58 @@
-::mods_hookNewObject("ui/screens/tooltip/tooltip_events", function(o) 
+::mods_hookNewObject("ui/screens/tooltip/tooltip_events", function(o)
 {
 	local original_onQueryUIElementTooltipData = o.onQueryUIElementTooltipData;
 
-	function extendTooltipData(tooltip, _entityId, _elementId, _elementOwner) 
+	// Arena trait have getActor in getTooltip, so bypass with hardcoded data
+	function getArenaTraitTooltip(_elementId, skill)
+	{
+		local title = skill.getName();
+		local descr = skill.getDescription();
+		local bonus1 = null;
+		local bonus2 = null;
+
+		if (_elementId.find("veteran") != null)
+		{
+			bonus1 = {
+				id = 10,
+				type = "text",
+				icon = "ui/icons/bravery.png",
+				text = "[color=" + this.Const.UI.Color.PositiveValue + "]+10[/color] Resolve"
+			};
+			bonus2 = {
+				id = 11,
+				type = "text",
+				icon = "ui/icons/special.png",
+				text = "Has a [color=" + this.Const.UI.Color.PositiveValue + "]50%[/color] chance to survive if struck down and not killed by a fatality"
+			};
+			descr += " So far, this character has fought in and won many matches.";
+		}
+		else if (_elementId.find("pit_fighter") != null)
+		{
+			descr += " So far, this character has fought in and won some matches.";
+		}
+		else if (_elementId.find("fighter") != null)
+		{
+			bonus1 = {
+				id = 10,
+				type = "text",
+				icon = "ui/icons/bravery.png",
+				text = "[color=" + this.Const.UI.Color.PositiveValue + "]+5[/color] Resolve"
+			};
+			descr += " So far, this character has fought in and won a few matches.";
+		}
+
+		local result = [
+			{ id = 1, type = "title", text = title },
+			{ id = 2, type = "description", text = descr }
+		];
+
+		if (bonus1 != null) result.push(bonus1);
+		if (bonus2 != null) result.push(bonus2);
+
+		return result;
+	}
+
+	function getObituaryStatTooltip(_elementId)
 	{
 		local tooltipMap = {
 			"world-screen.obituary.Level": ["Level", "The level the character was upon meeting their fate."],
@@ -16,10 +66,9 @@
 			"world-screen.obituary.RA": ["Ranged Skill", "The base ranged skill the character had upon meeting their fate."],
 			"world-screen.obituary.MD": ["Melee Defense", "The base melee defense the character had upon meeting their fate."],
 			"world-screen.obituary.RD": ["Ranged Defense", "The base ranged defense the character had upon meeting their fate."]
-			
 		};
 
-		if (_elementId in tooltipMap) 
+		if (_elementId in tooltipMap)
 		{
 			local data = tooltipMap[_elementId];
 			return [
@@ -28,16 +77,60 @@
 			];
 		}
 
-		return tooltip;
+		return null;
 	}
 
-	o.onQueryUIElementTooltipData = function(_entityId, _elementId, _elementOwner) 
+	o.onQueryUIElementTooltipData = function(_entityId, _elementId, _elementOwner)
 	{
-		local tooltip = original_onQueryUIElementTooltipData(_entityId, _elementId, _elementOwner);
+		// New Obituary header UI elements
+		local statTooltip = getObituaryStatTooltip(_elementId);
+		if (statTooltip != null)
+		{
+			return statTooltip;
+		}
 
-		// Extend tooltip and use the returned value
-		local extendedTooltip = extendTooltipData(tooltip, _entityId, _elementId, _elementOwner);
+		if (_elementId == null || _elementId == "" || _elementId.find("scripts/skills/") == null)
+		{
+			return original_onQueryUIElementTooltipData(_entityId, _elementId, _elementOwner);
+		}
 
-		return extendedTooltip;
-	}
+		local skill = ::new(_elementId);
+
+		// Backgrounds use getGenericTooltip, not getTooltip
+		if (_elementId.find("background") != null && _elementId.find("background") > 0)
+		{
+			return skill.getGenericTooltip();
+		}
+
+		// Arena traits manual override - they have getActor in getTooltip
+		if (_elementId.find("arena") != null)
+		{
+			return getArenaTraitTooltip(_elementId, skill);
+		}
+
+		if ("getTooltip" in skill)
+		{
+			try
+			{
+				return skill.getTooltip();
+			}
+			catch (e)
+			{
+				::logError("Better Obituary: skill.getTooltip() failed: " + e);
+			}
+		}
+		else if ("getGenericTooltip" in skill)
+		{
+			try
+			{
+				return skill.getGenericTooltip();
+			}
+			catch (e)
+			{
+				::logError("Better Obituary: skill.getGenericTooltip() failed: " + e);
+			}
+		}
+
+		return original_onQueryUIElementTooltipData(_entityId, _elementId, _elementOwner);
+	};
 });

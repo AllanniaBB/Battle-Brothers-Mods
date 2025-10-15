@@ -82,11 +82,12 @@
 	o.getDeadTraits <- function() 
 	{
 		local skills = this.getSkills().query(this.Const.SkillType.Trait, false, true);
+		
 		local list_traits = [];
 
 		foreach (i, s in skills)
-		{
-			if(::BetterObituary.Debug) ::logInfo("Better Obituary: getDeadTraits = " + i + " -> Type: " + s.getType());;
+		{		
+			if(::BetterObituary.Debug) ::logInfo("Better Obituary: s.FilenameByHash = " + ::IO.scriptFilenameByHash(s.ClassNameHash));
 		
 			local Trait = this.Const.SkillType.Trait;
 			local Background = this.Const.SkillType.Background;
@@ -95,8 +96,10 @@
 
 			if ((s.isType(Trait) || s.isType(Background)) && !s.isType(StatusEffect) && !s.isType(Special))
 			{
+				if(::BetterObituary.Debug) ::logInfo("Better Obituary: getDeadTraits = " + i + " -> Name: " + s.m.Name + " -> Type: " + s.getType());;
+						
 				local trait_data = {
-					"id": s.getID(),
+					"id": ::IO.scriptFilenameByHash(s.ClassNameHash),
 					"icon": s.getIcon()
 				};
 				list_traits.append(trait_data);
@@ -105,7 +108,31 @@
 
 		return list_traits;
 	};
+	
+	o.getDeadPerks <- function() 
+	{
+		local skills = this.getSkills().query(this.Const.SkillType.Perk, true, true);
+		local list_perks = [];
 
+		foreach (i, s in skills)
+		{
+			local Perk = this.Const.SkillType.Perk;
+
+			if (s.isType(Perk))
+			{
+				if(::BetterObituary.Debug) ::logInfo("Better Obituary: getDeadPerks = " + i + " -> Name: " + s.m.Name + " -> Type: " + s.getType());;
+						
+				local perk_data = {
+					"id": ::IO.scriptFilenameByHash(s.ClassNameHash),
+					"icon": s.getIcon()
+				};
+				list_perks.append(perk_data);
+			}
+		}
+
+		return list_perks;
+	};
+	
 	o.getDeadPermanentInjury <- function() 
 	{
 		local PermanentInjury = this.Const.SkillType.PermanentInjury;
@@ -113,13 +140,13 @@
 		local list_perminjuries = [];
 
 		foreach (i, s in skills) 
-		{
-			if(::BetterObituary.Debug) ::logInfo("Better Obituary: getDeadPermanentInjury = " + i + " -> Type: " + s.getType());;
-		
+		{		
 			if(s.isType(this.Const.SkillType.PermanentInjury))
 			{
+			if(::BetterObituary.Debug) ::logInfo("Better Obituary: getDeadPermanentInjury = " + i + " -> Name: " + s.m.Name + " -> Type: " + s.getType());;
+			
 				local injury_data = {
-					"id": s.getID(),
+					"id": ::IO.scriptFilenameByHash(s.ClassNameHash),
 					"icon": s.getIcon()
 				};
 				list_perminjuries.append(injury_data);
@@ -152,9 +179,12 @@
 	};
 	
 	o.finalizeFallen <- function(_fallen)
-	{
+	{	
+		if(::BetterObituary.Debug) ::logInfo("Better Obituary: Character Name = " + _fallen.Name);;
+		
 		_fallen.level <- this.getLevel();
 		_fallen.traits <- this.getDeadTraits();
+		_fallen.perks <- this.getDeadPerks();
 		_fallen.perminjuries <- this.getDeadPermanentInjury();
 		_fallen.stats <- [
 			this.getBaseProperties().Hitpoints,

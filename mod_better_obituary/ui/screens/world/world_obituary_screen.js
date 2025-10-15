@@ -170,29 +170,6 @@ WorldObituaryScreen.prototype.createDIV = function (_parentDiv)
     this.mIsVisible = false;
 };
 
-WorldObituaryScreen.prototype.applyStatHeaderSwap = function ()
-{
-	var SwapStats = MSU.getSettingValue("mod_better_obituary", "SwapStats");
-	if (!SwapStats) return;
-
-	var headerMap = [
-		'table-header-hp', 'table-header-ft', 'table-header-br', 'table-header-it',
-		'table-header-ma', 'table-header-ra', 'table-header-md', 'table-header-rd'
-	];
-
-	var newHeaderOrder = [4, 5, 6, 7, 0, 1, 2, 3];
-
-	for (var i = 0; i < headerMap.length; i++) {
-		var className = headerMap[i];
-		var selector = '.world-obituary-screen > .l-obituary-dialog-container .table-header .' + className;
-		var element = document.querySelector(selector);
-		if (element) {
-			var newIndex = newHeaderOrder[i];
-			var leftRem = 119 + (newIndex * 7.2) + 1;
-			element.style.setProperty('left', leftRem + 'rem', 'important');
-		}
-	}
-};
 
 WorldObituaryScreen.prototype.destroyDIV = function ()
 {
@@ -216,104 +193,136 @@ WorldObituaryScreen.prototype.destroyDIV = function ()
     this.mContainer = null;
 };
 
+WorldObituaryScreen.prototype.getStatOrder = function ()
+{
+    var SwapStats = MSU.getSettingValue("mod_better_obituary", "SwapStats");
+
+    return SwapStats
+        ? [4, 5, 6, 7, 0, 1, 2, 3]
+        : [0, 1, 2, 3, 4, 5, 6, 7];
+};
+
+WorldObituaryScreen.prototype.CreateStatHeader = function ()
+{
+    var statOrder = this.getStatOrder();
+
+    var headerMap = [
+        'table-header-hp', 'table-header-ft', 'table-header-br', 'table-header-it',
+        'table-header-ma', 'table-header-ra', 'table-header-md', 'table-header-rd'
+    ];
+
+    for (var i = 0; i < headerMap.length; i++) {
+        var className = headerMap[i];
+        var selector = '.world-obituary-screen > .l-obituary-dialog-container .table-header .' + className;
+        var element = document.querySelector(selector);
+        if (element) {
+            var newIndex = statOrder[i];
+            var leftRem = 119 + (newIndex * 7.2) + 1;
+            element.style.setProperty('left', leftRem + 'rem', 'important');
+        }
+    }
+};
+
 WorldObituaryScreen.prototype.addListEntry = function (_data)
 {
-	var result = $('<div class="l-row"/>');
-	this.mListScrollContainer.append(result);
+    var result = $('<div class="l-row"/>');
+    this.mListScrollContainer.append(result);
 
-	result.append($('<div class="name text-font-normal font-color-description">' + _data.Name + '</div>'));
-	result.append($('<div class="time text-font-normal font-color-description">' + _data.TimeWithCompany + '</div>'));
-	result.append($('<div class="battles text-font-normal font-color-description">' + _data.Battles + '</div>'));
-	result.append($('<div class="kills text-font-normal font-color-description">' + _data.Kills + '</div>'));
-	result.append($('<div class="killed-by text-font-normal font-color-description">' + _data.KilledBy + '</div>'));
+    result.append($('<div class="name text-font-normal font-color-description">' + _data.Name + '</div>'));
+    result.append($('<div class="time text-font-normal font-color-description">' + _data.TimeWithCompany + '</div>'));
+    result.append($('<div class="battles text-font-normal font-color-description">' + _data.Battles + '</div>'));
+    result.append($('<div class="kills text-font-normal font-color-description">' + _data.Kills + '</div>'));
+    result.append($('<div class="killed-by text-font-normal font-color-description">' + _data.KilledBy + '</div>'));
 
-	if (typeof _data.traits != "undefined" && _data.stats[0]) 
-	{
-		result.append($('<div class="level text-font-normal font-color-description">' + _data.level + '</div>'));
+    if (typeof _data.traits !== "undefined" && _data.stats[0]) 
+    {
+        result.append($('<div class="level text-font-normal font-color-description">' + _data.level + '</div>'));
 
-		var statsLabels = ['hptext', 'fttext', 'brtext', 'ittext', 'matext', 'ratext', 'mdtext', 'rdtext'];
-		var TalentStackedStars = MSU.getSettingValue("mod_better_obituary", "StackedStars");
-		var SwapStats = MSU.getSettingValue("mod_better_obituary", "SwapStats");
-		var talentPrefix = TalentStackedStars ? 'BO_stacked_talent_' : 'BO_talent_';
-		
-		if(SwapStats){
-			this.applyStatHeaderSwap();
-		}
+        // Stat header
+        this.CreateStatHeader();
 
-		var newLeftPositions = SwapStats
-			? [4, 5, 6, 7, 0, 1, 2, 3]
-			: [0, 1, 2, 3, 4, 5, 6, 7];
+        var statsLabels = ['hptext', 'fttext', 'brtext', 'ittext', 'matext', 'ratext', 'mdtext', 'rdtext'];
+        var TalentStackedStars = MSU.getSettingValue("mod_better_obituary", "StackedStars");
+        var statOrder = this.getStatOrder();
+        var talentPrefix = TalentStackedStars ? 'BO_stacked_talent_' : 'BO_talent_';
 
-		var statWidth = !TalentStackedStars ? '6.5rem' : '';
-		var iconWidth = !TalentStackedStars ? '3.6rem' : '';
+        var statWidth = !TalentStackedStars ? '6.5rem' : '';
+        var iconWidth = !TalentStackedStars ? '3.6rem' : '';
 
-		for (var i = 0; i < statsLabels.length; i++) 
-		{
-			var statClass = statsLabels[i];
-			var statValue = _data.stats[i];
-			var talentIndex = _data.talents[i];
+        for (var i = 0; i < statsLabels.length; i++) 
+        {
+            var statClass = statsLabels[i];
+            var statValue = _data.stats[i];
+            var talentIndex = _data.talents[i];
 
-			var statDiv = $('<div class="' + statClass + ' text-font-normal font-color-description">').append(statValue);
+            var statDiv = $('<div class="' + statClass + ' text-font-normal font-color-description">').append(statValue);
 
-			if (!TalentStackedStars) 
-			{
-				statDiv[0].style.setProperty('width', statWidth, 'important');
-			}
+            if (!TalentStackedStars) {
+                statDiv[0].style.setProperty('width', statWidth, 'important');
+            }
 
-			var star = $('<img/>').attr('src', Path.GFX + 'ui/icons/' + talentPrefix + talentIndex + '.png');
-			if (!TalentStackedStars) 
-			{
-				star[0].style.setProperty('width', iconWidth, 'important');
-			}
-			statDiv.append(star);
+            var star = $('<img/>').attr('src', Path.GFX + 'ui/icons/' + talentPrefix + talentIndex + '.png');
+            if (!TalentStackedStars) {
+                star[0].style.setProperty('width', iconWidth, 'important');
+            }
+            statDiv.append(star);
 
-			var leftRem = 119 + (newLeftPositions[i] * 7.2);
-			statDiv[0].style.setProperty('left', leftRem + 'rem', 'important');
+            var leftRem = 119 + (statOrder[i] * 7.2);
+            statDiv[0].style.setProperty('left', leftRem + 'rem', 'important');
 
-			result.append(statDiv);
-		}
+            result.append(statDiv);
+        }
 
-		// Traits
-		var show_traits = MSU.getSettingValue("mod_better_obituary", "show_traits");
-		var traitsGroup = $('<div class="trait-group"></div>');
-		for (var i = 0; i < show_traits; i++)
-		{
-			var trait = _data.traits[i];
-			if (trait) 
-			{
-				if (trait.icon && trait.id) 
-				{
-					traitsGroup.append($('<img/>').attr('src', Path.GFX + trait.icon).attr('data-id', trait.id));
-					console.error('Traits = ' + trait.icon + " -> " + trait.id);
-				} 
-				else 
-				{
-					traitsGroup.append($('<img/>').attr('src', Path.GFX + trait));
-				}
-			}
-		}
-		result.append(traitsGroup);
+        // Traits
+        var show_traits = MSU.getSettingValue("mod_better_obituary", "show_traits");
+        var traitsGroup = $('<div class="trait-group"></div>');
+        for (var i = 0; i < show_traits; i++)
+        {
+            var trait = _data.traits[i];
+            if (trait) 
+            {
+                if (trait.icon && trait.id) 
+                {
+                    var img = $('<img/>')
+                        .attr('src', Path.GFX + trait.icon)
+                        .attr('id', trait.id);
+                    traitsGroup.append(img);
+                    img.bindTooltip({ contentType: 'ui-element', elementId: trait.id });
+                } 
+                else 
+                {
+                    traitsGroup.append($('<img/>').attr('src', Path.GFX + trait));
+                }
+            }
+        }
+        result.append(traitsGroup);
 
-		// Perm Injuries
-		var show_perminjuries = MSU.getSettingValue("mod_better_obituary", "show_perminjuries");
-		var perminjuryGroup = $('<div class="perminjury-group"></div>');
-		for (var i = 0; i < show_perminjuries; i++) 
-		{
-			var injury = _data.perminjuries[i];
-			if (injury) 
-			{
-				if (injury.icon && injury.id) 
-				{
-					perminjuryGroup.append($('<img/>').attr('src', Path.GFX + injury.icon).attr('data-id', injury.id));
-				} 
-				else 
-				{
-					perminjuryGroup.append($('<img/>').attr('src', Path.GFX + injury));
-				}
-			}
-		}
-		result.append(perminjuryGroup);
-	}
+        // Perm Injuries
+        var show_perminjuries = MSU.getSettingValue("mod_better_obituary", "show_perminjuries");
+        var perminjuryGroup = $('<div class="perminjury-group"></div>');
+        for (var i = 0; i < show_perminjuries; i++) 
+        {
+            var injury = _data.perminjuries[i];
+            if (injury) 
+            {
+                if (injury.icon && injury.id) 
+                {
+                    var img = $('<img/>')
+                        .attr('src', Path.GFX + injury.icon)
+                        .attr('id', injury.id);
+                    perminjuryGroup.append(img);
+                    img.bindTooltip({ contentType: 'ui-element', elementId: injury.id });
+                } 
+                else 
+                {
+                    perminjuryGroup.append($('<img/>').attr('src', Path.GFX + injury));
+                }
+            }
+        }
+        result.append(perminjuryGroup);
+
+        // TODO: Perks (need to regig Ui to fit)
+    }
 };
 
 

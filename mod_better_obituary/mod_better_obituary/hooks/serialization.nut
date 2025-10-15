@@ -8,6 +8,7 @@
             return {
                 Level = "level" in _fallen ? _fallen.level : 0,
                 Traits = "traits" in _fallen ? _fallen.traits : [],
+                Perks = "perks" in _fallen ? _fallen.perks : [],
                 Injures = "perminjuries" in _fallen ? _fallen.perminjuries : [],
                 Stats = "stats" in _fallen ? _fallen.stats : [],
                 Talents = "talents" in _fallen ? _fallen.talents : []
@@ -35,12 +36,13 @@
         foreach (index, entry in data) 
 		{
 			if (index >= this.m.Fallen.len()) break;
-			
-            this.m.Fallen[index].level <- entry.Level;
-            this.m.Fallen[index].traits <- entry.Traits;
-            this.m.Fallen[index].perminjuries <- entry.Injures;
-            this.m.Fallen[index].stats <- entry.Stats;
-            this.m.Fallen[index].talents <- entry.Talents;
+						
+			this.m.Fallen[index].level <- "Level" in entry ? entry.Level : 0;
+			this.m.Fallen[index].traits <- "Traits" in entry ? entry.Traits : [];
+			this.m.Fallen[index].perks <- "Perks" in entry ? entry.Perks : [];
+			this.m.Fallen[index].perminjuries <- "Injures" in entry ? entry.Injures : [];
+			this.m.Fallen[index].stats <- "Stats" in entry ? entry.Stats : [];
+			this.m.Fallen[index].talents <- "Talents" in entry ? entry.Talents : [];
 
 			if(::BetterObituary.Debug) 
 			{
@@ -61,6 +63,7 @@
 				::logInfo("Better Obituary: Fallen info - Level = " + this.m.Fallen[index].level);
 
 				logListInfo("Traits", this.m.Fallen[index].traits);
+				logListInfo("Perks", this.m.Fallen[index].perks);
 				logListInfo("Injuries", this.m.Fallen[index].perminjuries);
 				logListInfo("Stats", this.m.Fallen[index].stats);
 				logListInfo("Talents", this.m.Fallen[index].talents);
