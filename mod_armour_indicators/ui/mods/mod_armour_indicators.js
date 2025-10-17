@@ -1,359 +1,255 @@
 "use strict";
 
-$.fn.assignListBrotherHeadStatus = function(_ratio)
-{ // New function - add head armor damage icon
-    var layer = this.find('.asset-layer:first');
-    
-    if (layer.length > 0)
-    {
-        var statusContainer = layer.find('.head-status-container:first');
-        var statusImage = $('<img/>');
-        if (_ratio >=0.75) 		 statusImage.attr('src', Path.GFX + 'ui/icons/armor_head_1.png');
-        else if (_ratio >=0.50)  statusImage.attr('src', Path.GFX + 'ui/icons/armor_head_2.png');
-        else if (_ratio >=0.25)  statusImage.attr('src', Path.GFX + 'ui/icons/armor_head_3.png');
-        else				     statusImage.attr('src', Path.GFX + 'ui/icons/armor_head_4.png');
-        statusContainer.append(statusImage);
-        layer.append(statusContainer);
-    }
+// Display modes
+var ArmourIndicatorsMode = 0; // 0 = Armor, 1 = Weapon+Shield, 2 = None
+
+// Utility function to get icon for a ratio
+function getIconForRatio(type, ratio) 
+{
+    var Icons_Green = MSU.getSettingValue("mod_armour_indicators", "Icons_Green") / 100;
+    var Icons_Yellow = MSU.getSettingValue("mod_armour_indicators", "Icons_Yellow") / 100;
+    var Icons_Orange = MSU.getSettingValue("mod_armour_indicators", "Icons_Orange") / 100;
+    var iconPath = Path.GFX + 'ui/icons/';
+
+    if (ratio >= Icons_Green) return iconPath + type + '_1.png';
+    if (ratio >= Icons_Yellow) return iconPath + type + '_2.png';
+    if (ratio >= Icons_Orange) return iconPath + type + '_3.png';
+	
+    return iconPath + type + '_4.png';
 }
 
-$.fn.assignListBrotherArmorStatus = function(_ratio)
-{ // New function - add body armor damage icon
-    var layer = this.find('.asset-layer:first');
-    
-    if (layer.length > 0)
-    {
-        var statusContainer = layer.find('.armor-status-container:first');
-        var statusImage = $('<img/>');
-        if (_ratio >= 0.75)		 statusImage.attr('src', Path.GFX + 'ui/icons/armor_body_1.png');
-        else if (_ratio >=0.50)  statusImage.attr('src', Path.GFX + 'ui/icons/armor_body_2.png');
-        else if (_ratio >=0.25)  statusImage.attr('src', Path.GFX + 'ui/icons/armor_body_3.png');
-        else				     statusImage.attr('src', Path.GFX + 'ui/icons/armor_body_4.png');
-        statusContainer.append(statusImage);
-        layer.append(statusContainer);
-    }
-}
 
-$.fn.removeListBrotherHeadStatus = function()
-{ // New function - remove head armor damage icon
+$.fn.assignStatusIcon = function(type, ratio) 
+{
     var layer = this.find('.asset-layer:first');
-    
-    if (layer.length > 0)
-    {
-        var statusContainer = layer.find('.head-status-container:first');
+	
+    if (layer.length === 0) return;
+
+    var statusContainer = layer.find('.' + type + '-status-container:first');
+    if (statusContainer.length === 0) 
+	{
+        statusContainer = $('<div class="' + type + '-status-container"></div>');
+        layer.append(statusContainer);
+    } 
+	else 
+	{
+        statusContainer.empty();
+    }
+
+    var statusImage = $('<img/>').attr('src', getIconForRatio(type, ratio));
+    statusContainer.append(statusImage);
+};
+
+$.fn.removeStatusIcon = function(type) 
+{
+    var layer = this.find('.asset-layer:first');
+    if (layer.length > 0) 
+	{
+        var statusContainer = layer.find('.' + type + '-status-container:first');
         var statusImage = statusContainer.find('img:first');
         if (statusImage.length > 0) 
-        {
+		{
             statusImage.remove();
         }
     }
-}
-$.fn.removeListBrotherArmorStatus = function()
-{ // New function - remove body armor damage icon
-    var layer = this.find('.asset-layer:first');
-    
-    if (layer.length > 0)
-    {
-        var statusContainer = layer.find('.armor-status-container:first');
-        var statusImage = statusContainer.find('img:first');
-        if (statusImage.length > 0) 
-        {
-            statusImage.remove();
-        }
+};
+
+// Assign armor status
+$.fn.assignListBrotherHeadStatus   = function(ratio) { this.assignStatusIcon('head', ratio); };
+$.fn.assignListBrotherArmorStatus  = function(ratio) { this.assignStatusIcon('body', ratio); };
+$.fn.assignListBrotherWeaponStatus = function(ratio) { this.assignStatusIcon('weapon', ratio); };
+$.fn.assignListBrotherShieldStatus = function(ratio) { this.assignStatusIcon('shield', ratio); };
+
+// Remove armor status
+$.fn.removeListBrotherHeadStatus   = function() { this.removeStatusIcon('head'); };
+$.fn.removeListBrotherArmorStatus  = function() { this.removeStatusIcon('body'); };
+$.fn.removeListBrotherWeaponStatus = function() { this.removeStatusIcon('weapon'); };
+$.fn.removeListBrotherShieldStatus = function() { this.removeStatusIcon('shield'); };
+
+var originalCreateListBrother = $.fn.createListBrother;
+$.fn.createListBrother = function(_brotherId, _classes) {
+
+    var result = originalCreateListBrother.apply(this, arguments);
+    var assetLayer = result.find('.asset-layer');
+
+    if (assetLayer.length) 
+	{
+		var containers = ['head', 'body', 'weapon', 'shield'];
+		
+		for (var i = 0; i < containers.length; i++) 
+		{
+			var type = containers[i];
+			if (!assetLayer.find('.' + type + '-status-container').length) 
+			{
+				assetLayer.append('<div class="' + type + '-status-container"></div>');
+			}
+		}
     }
-}
-
-// overwrite
- $.fn.createListBrother = function(_brotherId, _classes)
- {
-    var result = $('<div class="ui-control brother is-list-brother"/>');
-
-    if (_classes !== undefined && _classes !== null && typeof(_classes) === 'string')
-    {
-        result.addClass(_classes);
-    }
-
-    // highlight layer
-    var highlightLayer = $('<div class="highlight-layer"/>');
-    result.append(highlightLayer);
-    highlightLayer.createImage(Path.GFX + 'ui/skin/inventory_highlight.png', null, null, null);
-
-    // image layer
-    var imageLayer = $('<div class="image-layer"/>');
-    result.append(imageLayer);
-
-    /*imageLayer.createImage(null, function (_image)
-    {
-        var data = result.data('brother');
-        _image.removeClass('display-none').addClass('display-block');
-        //_image.centerImageWithinParent(data.imageOffsetX, data.imageOffsetY, data.imageScale);
-    }, null, 'display-none');*/
-
-    imageLayer.createImage(null, null, null, '');
-
-    // lock layer
-    var lockLayer = $('<div class="lock-layer"/>');
-    result.append(lockLayer);
-    lockLayer.createImage(null, function (_image)
-    {
-        _image.removeClass('display-none').addClass('display-block');
-    }, null, 'display-none');
-
- 	// mood layer
-    var moodLayer = $('<div class="mood-layer"/>');
-    result.append(moodLayer);
-    moodLayer.createImage(null, function (_image)
-    {
-    	_image.removeClass('display-none').addClass('display-block');
-    }, null, 'display-none');
-     
-
-    // name layer
-    /*var nameLayer = $('<div class="name-layer"/>');
-    result.append(nameLayer);
-    var nameLabel = $('<div class="label title-font-very-small font-color-brother-name"/>');
-    nameLayer.append(nameLabel); */
-
-    // asset layer
-    var assetLayer = $('<div class="asset-layer"/>');
-    result.append(assetLayer);
-     
-    /*var dailyMoneyContainer = $('<div class="daily-money-container"/>');
-    var dailyMoneyCostsText = $('<div class="label text-font-small font-color-progressbar-label"/>');
-    dailyMoneyContainer.append(dailyMoneyCostsText);
-    var dailyMoneyImage = $('<img/>');
-    dailyMoneyImage.attr('src', Path.GFX + Asset.ICON_ASSET_DAILY_MONEY);
-    dailyMoneyImage.bindTooltip({ contentType: 'ui-element', elementId: TooltipIdentifier.Assets.DailyMoney });
-
-    dailyMoneyContainer.append(dailyMoneyImage);
-    assetLayer.append(dailyMoneyContainer);*/
-    
-    var statusContainer = $('<div class="primary-status-container"/>');
-    assetLayer.append(statusContainer);
-
-    var statusContainer = $('<div class="status-container"/>');
-    assetLayer.append(statusContainer);
-    
-    var statusContainer = $('<div class="head-status-container"/>'); // Added for head icon
-    assetLayer.append(statusContainer);
-    
-    var statusContainer = $('<div class="armor-status-container"/>'); // Added for body icon
-    assetLayer.append(statusContainer);
-          
-    // add data
-    var data = this.data('brother') || {};
-    data.id = _brotherId || 0;
-    data.imageOffsetX = 0;
-    data.imageOffsetY = 0;
-    data.imageScale = 0;
-
-    result.data('brother', data);
-
-    result.bindTooltip({ contentType: 'roster-entity', entityId: _brotherId });
-
-    this.append(result);
 
     return result;
 };
 
-
-// overwrite
-CharacterScreenBrothersListModule.prototype.addBrotherSlotDIV = function (_parentDiv, _data, _index, _allowReordering)
+function getItemById(dataSource, itemId) 
 {
-    var self = this;
-    var screen = $('.character-screen');
-
-    // create: slot & background layer
-    var result = _parentDiv.createListBrother(_data[CharacterScreenIdentifier.Entity.Id]);
-    result.attr('id', 'slot-index_' + _data[CharacterScreenIdentifier.Entity.Id]);
-    result.data('ID', _data[CharacterScreenIdentifier.Entity.Id]);
-    result.data('idx', _index);
-
-    this.mSlots[_index].data('child', result);
-
-    if (_index <= 17)
-        ++this.mNumActive;
-
-    // drag handler
-    if (_allowReordering)
-    {
-        result.drag("start", function (ev, dd)
-        {
-            // dont allow drag if this is an empty slot
-            /*var data = $(this).data('item');
-            if (data.isEmpty === true)
-            {
-                return false;
-            }*/
-
-            // build proxy
-            var proxy = $('<div class="ui-control brother is-proxy"/>');
-            proxy.appendTo(document.body);
-            proxy.data('idx', _index);
-
-            var imageLayer = result.find('.image-layer:first');
-            if (imageLayer.length > 0)
-            {
-                imageLayer = imageLayer.clone();
-                proxy.append(imageLayer);
-            }
-
-            $(dd.drag).addClass('is-dragged');
-
-            return proxy;
-        }, { distance: 3 });
-
-        result.drag(function (ev, dd)
-        {
-            $(dd.proxy).css({ top: dd.offsetY, left: dd.offsetX });
-        }, { relative: false, distance: 3 });
-
-        result.drag("end", function (ev, dd)
-        {
-            var drag = $(dd.drag);
-            var drop = $(dd.drop);
-            var proxy = $(dd.proxy);
-
-            var allowDragEnd = true; // TODO: check what we're dropping onto
-
-            // not dropped into anything?
-            if (drop.length === 0 || allowDragEnd === false)
-            {
-                proxy.velocity("finish", true).velocity({ top: dd.originalY, left: dd.originalX },
-			    {
-			        duration: 300,
-			        complete: function ()
-			        {
-			            proxy.remove();
-			            drag.removeClass('is-dragged');
-			        }
-			    });
-            }
-            else
-            {
-                proxy.remove();
-            }
-        }, { drop: '.is-brother-slot' });
-    }
-
-    // update image & name
-	
-    var character = _data[CharacterScreenIdentifier.Entity.Character.Key];
-    var imageOffsetX = (CharacterScreenIdentifier.Entity.Character.ImageOffsetX in character ? character[CharacterScreenIdentifier.Entity.Character.ImageOffsetX] : 0);
-    var imageOffsetY = (CharacterScreenIdentifier.Entity.Character.ImageOffsetY in character ? character[CharacterScreenIdentifier.Entity.Character.ImageOffsetY] : 0);
-
-    result.assignListBrotherImage(Path.PROCEDURAL + character[CharacterScreenIdentifier.Entity.Character.ImagePath], imageOffsetX, imageOffsetY, 0.66);
-    //result.assignListBrotherName(character[CharacterScreenIdentifier.Entity.Character.Name]);
-    //result.assignListBrotherDailyMoneyCost(character[CharacterScreenIdentifier.Entity.Character.DailyMoneyCost]);
-
-    if(CharacterScreenIdentifier.Entity.Character.LeveledUp in character && character[CharacterScreenIdentifier.Entity.Character.LeveledUp] === true)
-    {
-        result.assignListBrotherLeveledUp();
-    }
-
-    /*if(CharacterScreenIdentifier.Entity.Character.DaysWounded in character && character[CharacterScreenIdentifier.Entity.Character.DaysWounded] === true)
-    {
-        result.assignListBrotherDaysWounded();
-    }*/
-
-    if('moodIcon' in character && this.mDataSource.getInventoryMode() == CharacterScreenDatasourceIdentifier.InventoryMode.Stash)
-    {
-    	result.showListBrotherMoodImage(this.IsMoodVisible, character['moodIcon']);
-    }
-
-    for(var i = 0; i != _data['injuries'].length && i < 3; ++i)
-    {
-        result.assignListBrotherStatusEffect(_data['injuries'][i].imagePath, _data[CharacterScreenIdentifier.Entity.Id], _data['injuries'][i].id)
-    }
-
-    if(_data['injuries'].length <= 2 && _data['stats'].hitpoints < _data['stats'].hitpointsMax)
-    {
-    	result.assignListBrotherDaysWounded();
-    }
-    
-    if (_data['stats'].armorHead < _data['stats'].armorHeadMax)
-    { // head armor damaged
-        result.assignListBrotherHeadStatus(_data['stats'].armorHead / _data['stats'].armorHeadMax);
-    }
-    
-    if (_data['stats'].armorBody < _data['stats'].armorBodyMax)
-    { // body armor damaged
-        result.assignListBrotherArmorStatus(_data['stats'].armorBody / _data['stats'].armorBodyMax);
-    }
-
-    result.assignListBrotherClickHandler(function (_brother, _event)
+    if (dataSource && itemId) 
 	{
-        var data = _brother.data('brother');
-        self.mDataSource.selectedBrotherById(data.id);
+        for (var i = 0; i < dataSource.length; i++) 
+		{
+            if (dataSource[i].id === itemId) 
+			{
+                return dataSource[i];
+            }
+        }
+    }
+    return null;
+}
+
+function updateBrotherStatusIcons(_data, result) 
+{
+    var armorHead = _data.stats.armorHead;
+    var armorBody = _data.stats.armorBody;
+    var mainhand = _data.equipment ? _data.equipment.mainhand : null;
+    var offhand = _data.equipment ? _data.equipment.offhand : null;
+
+    // Show status icons based on mode and condition
+    if (ArmourIndicatorsMode === 0) 
+	{
+        if (armorHead < _data.stats.armorHeadMax) result.assignListBrotherHeadStatus(armorHead / _data.stats.armorHeadMax);
+        if (armorBody < _data.stats.armorBodyMax) result.assignListBrotherArmorStatus(armorBody / _data.stats.armorBodyMax);
+    }
+
+    if (ArmourIndicatorsMode === 1) 
+	{
+        if (mainhand && mainhand.amount)
+		{
+            var repairValue = parseFloat(mainhand.amount.replace('%', '')) / 100;
+			
+            if (repairValue < 1.0) result.assignListBrotherWeaponStatus(repairValue);
+            else result.removeListBrotherWeaponStatus();
+        } 
+		else 
+		{
+            result.removeListBrotherWeaponStatus();
+        }
+
+        if (offhand && offhand.amount) 
+		{
+            var repairValue = parseFloat(offhand.amount.replace('%', '')) / 100;
+			
+            if (repairValue < 1.0) result.assignListBrotherShieldStatus(repairValue);
+            else result.removeListBrotherShieldStatus();
+        } 
+		else 
+		{
+            result.removeListBrotherShieldStatus();
+        }
+    }
+}
+
+
+var originalAddBrotherSlotDIV = CharacterScreenBrothersListModule.prototype.addBrotherSlotDIV;
+CharacterScreenBrothersListModule.prototype.addBrotherSlotDIV = function(_parentDiv, _data, _index, _allowReordering) {
+    originalAddBrotherSlotDIV.apply(this, arguments);
+
+    var result = this.mSlots[_index].data('child');
+    if (!result) return;
+
+    updateBrotherStatusIcons(_data, result);
+
+    result.data('brother', _data);
+};
+
+
+var originalUpdateBrotherSlot = CharacterScreenBrothersListModule.prototype.updateBrotherSlot;
+CharacterScreenBrothersListModule.prototype.updateBrotherSlot = function(_data) {
+    originalUpdateBrotherSlot.apply(this, arguments);
+
+    var slot = this.mListScrollContainer.find('#slot-index_' + _data[CharacterScreenIdentifier.Entity.Id] + ':first');
+
+    if (slot.length === 0) {
+        return;
+    }
+
+	// Clear previous status icons before recalculating
+    slot.removeListBrotherHeadStatus();
+    slot.removeListBrotherArmorStatus();
+    slot.removeListBrotherWeaponStatus();
+    slot.removeListBrotherShieldStatus();
+
+    updateBrotherStatusIcons(_data, slot);
+};
+
+
+var originalCreateDIV = CharacterScreenInventoryListModule.prototype.createDIV;
+CharacterScreenInventoryListModule.prototype.createDIV = function(_parentDiv) 
+{
+    originalCreateDIV.call(this, _parentDiv);
+
+    var self = this;
+
+    var layout = $('<div class="l-button is-armourindicators-filter"/>');
+
+    this.mFilterPanel.append(layout);
+    this.mFilterArmourIndicatorsButton = layout.createImageButton(Path.GFX + 'ui/icons/icon_cycle_1.png', function () 
+	{
+        var mode = self.mParent.mParent.mBrothersModule.cycleArmourIndicators();
+
+        if (mode === 0)			self.mFilterArmourIndicatorsButton.changeButtonImage(Path.GFX + 'ui/icons/icon_cycle_1.png');
+        else if (mode === 1)	self.mFilterArmourIndicatorsButton.changeButtonImage(Path.GFX + 'ui/icons/icon_cycle_2.png');
+        else					self.mFilterArmourIndicatorsButton.changeButtonImage(Path.GFX + 'ui/icons/icon_cycle_3.png');
+    }, '', 3);
+
+    // Bind the tooltip after button creation
+    this.mFilterArmourIndicatorsButton.bindTooltip({
+        contentType: 'msu-generic',
+        modId: 'mod_armour_indicators',  // Replace with your mod's ID
+        elementId: 'MyScreen.isArmourIndicatorsFilterButton',
     });
 };
 
-// overwrite
-CharacterScreenBrothersListModule.prototype.updateBrotherSlot = function (_data)
+
+// New function - toggle armor damage icon visibility
+CharacterScreenBrothersListModule.prototype.cycleArmourIndicators = function ()
 {
-	var slot = this.mListScrollContainer.find('#slot-index_' + _data[CharacterScreenIdentifier.Entity.Id] + ':first');
-	if (slot.length === 0)
-	{
-		return;
-	}
+    ArmourIndicatorsMode = (ArmourIndicatorsMode + 1) % 3;
 
-	// update image & name
-    var character = _data[CharacterScreenIdentifier.Entity.Character.Key];
-    var imageOffsetX = (CharacterScreenIdentifier.Entity.Character.ImageOffsetX in character ? character[CharacterScreenIdentifier.Entity.Character.ImageOffsetX] : 0);
-    var imageOffsetY = (CharacterScreenIdentifier.Entity.Character.ImageOffsetY in character ? character[CharacterScreenIdentifier.Entity.Character.ImageOffsetY] : 0);
+    var brothersList = this.mDataSource.getBrothersList();
 
-    slot.assignListBrotherImage(Path.PROCEDURAL + character[CharacterScreenIdentifier.Entity.Character.ImagePath], imageOffsetX, imageOffsetY, 0.66);
-    slot.assignListBrotherName(character[CharacterScreenIdentifier.Entity.Character.Name]);
-    slot.assignListBrotherDailyMoneyCost(character[CharacterScreenIdentifier.Entity.Character.DailyMoneyCost]);
-
-    if(this.mDataSource.getInventoryMode() == CharacterScreenDatasourceIdentifier.InventoryMode.Stash)
-        slot.showListBrotherMoodImage(this.IsMoodVisible, character['moodIcon']);
-
-    slot.removeListBrotherStatusEffects();
-    slot.removeListBrotherHeadStatus(); // head armor damaged
-    slot.removeListBrotherArmorStatus(); // body armor damaged
-
-    for (var i = 0; i != _data['injuries'].length && i < 3; ++i)
+    for (var i = 0; i < this.mSlots.length; ++i)
     {
-        slot.assignListBrotherStatusEffect(_data['injuries'][i].imagePath, character[CharacterScreenIdentifier.Entity.Id], _data['injuries'][i].id)
-    }
+        var child = this.mSlots[i].data('child');
+        if (child != null)
+        {
+            var slotId = child.data('ID');
 
-    if (_data['injuries'].length <= 2 && _data['stats'].hitpoints < _data['stats'].hitpointsMax)
-    {
-        slot.assignListBrotherDaysWounded();
-    }
-    
-    if (_data['stats'].armorHead < _data['stats'].armorHeadMax) 
-    { // head armor damaged
-        slot.assignListBrotherHeadStatus(_data['stats'].armorHead / _data['stats'].armorHeadMax);
-    }
-    
-    if (_data['stats'].armorBody < _data['stats'].armorBodyMax) 
-    { // body armor damaged
-        slot.assignListBrotherArmorStatus(_data['stats'].armorBody / _data['stats'].armorBodyMax);
-    }
+            if (slotId == null) 
+			{
+                continue;
+            }
 
-    if (CharacterScreenIdentifier.Entity.Character.LeveledUp in character && character[CharacterScreenIdentifier.Entity.Character.LeveledUp] === false)
-    {
-        slot.removeListBrotherLeveledUp();
+            var updatedData = null;
+            for (var j = 0; j < brothersList.length; ++j)
+            {
+                //if (brothersList[j].id === slotId)
+				if (brothersList[j] && brothersList[j].id === slotId)
+                {
+                    updatedData = brothersList[j];
+                    break;
+                }
+            }
+
+            if (updatedData !== null) 
+			{
+                // Clear previous status icons before recalculating
+                child.removeListBrotherHeadStatus();
+                child.removeListBrotherArmorStatus();
+                child.removeListBrotherWeaponStatus();
+                child.removeListBrotherShieldStatus();
+
+                // Recalculate and re-apply the armor status icons based on current data
+                this.updateBrotherSlot(updatedData);
+            }
+        }
     }
-
-    /*
-	var imageContainer = slot.find('.l-brother-slot-image:first');
-	if (imageContainer.length > 0)
-	{
-		var image = imageContainer.find('img:first');
-		if (image.length > 0)
-		{
-			image.attr('src', Path.PROCEDURAL + _brother.character.imagePath);
-		}
-	}
-
-	// update text
-	var textContainer = slot.find('.l-brother-slot-text:first');
-	if (textContainer.length > 0)
-	{
-		textContainer.html(_brother.character.name);
-	}
-	*/
+    return ArmourIndicatorsMode;
 };

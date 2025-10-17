@@ -1,15 +1,29 @@
-.ui-control.brother > .asset-layer .head-status-container
-{
+
+.ui-control.brother > .asset-layer .head-status-container,
+.ui-control.brother > .asset-layer .weapon-status-container,
+.ui-control.brother > .asset-layer .body-status-container,
+.ui-control.brother > .asset-layer .shield-status-container {
     width: 2.7rem;
-    height: 3.0rem;
-	position: absolute;
+    height: 2.7rem;
+    position: absolute;
     float: left;
-	margin-top: 3.9rem;
-    margin-left: 4.6rem;
+    margin-left: 4.3rem;
 }
 
-.ui-control.brother > .asset-layer .head-status-container img 
-{
+.ui-control.brother > .asset-layer .head-status-container,
+.ui-control.brother > .asset-layer .weapon-status-container {
+    margin-top: 3.9rem;
+}
+
+.ui-control.brother > .asset-layer .body-status-container,
+.ui-control.brother > .asset-layer .shield-status-container {
+    margin-top: 5.7rem;
+}
+
+.ui-control.brother > .asset-layer .head-status-container img,
+.ui-control.brother > .asset-layer .body-status-container img,
+.ui-control.brother > .asset-layer .weapon-status-container img,
+.ui-control.brother > .asset-layer .shield-status-container img {
     width: 2.5rem;
     height: 2.5rem;
     float: left;
@@ -17,21 +31,19 @@
     position: relative;
 }
 
-.ui-control.brother > .asset-layer .armor-status-container
-{
-    width: 2.7rem;
-    height: 3.0rem;
-	position: absolute;
-    float: left;
-	margin-top: 5.7rem;
-    margin-left: 4.6rem;
+.character-screen-container .inventory-list-module .filter-panel .l-button.is-armourindicators-filter {
+    left: 35.0rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.ui-control.brother > .asset-layer .armor-status-container img 
-{
-    width: 2.5rem;
-    height: 2.5rem;
-    float: left;
+.character-screen-container .inventory-list-module .filter-panel .l-button.is-armourindicators-filter > img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
     display: block;
-    position: relative;
 }
+
+
+
