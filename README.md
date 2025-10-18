@@ -1,5 +1,5 @@
 <h3><a href="https://www.nexusmods.com/battlebrothers/mods/96?page=1">mod_armour_indicators</a></h3>
-<b>Status:</b> 🟡 Initial update - No known issues.<br>
+<b>Status:</b> 🟢 Updated (complete rework) - No known issues.<br>
 <b>Last tested:</b> 5/10/2025<br>
 <b>Vanilla:</b> v1.5.1.7<br>
 <b>Legends:</b> v19.1.47
