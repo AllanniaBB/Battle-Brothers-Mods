@@ -1,13 +1,25 @@
-
 .ui-control.brother > .asset-layer .head-status-container,
-.ui-control.brother > .asset-layer .weapon-status-container,
 .ui-control.brother > .asset-layer .body-status-container,
-.ui-control.brother > .asset-layer .shield-status-container {
+.ui-control.brother > .asset-layer .weapon-status-container,
+.ui-control.brother > .asset-layer .shield-status-container,
+.ui-control.brother > .asset-layer .head2-status-container,
+.ui-control.brother > .asset-layer .body2-status-container {
     width: 2.7rem;
     height: 2.7rem;
     position: absolute;
     float: left;
+}
+
+.ui-control.brother > .asset-layer .head-status-container,
+.ui-control.brother > .asset-layer .body-status-container,
+.ui-control.brother > .asset-layer .weapon-status-container,
+.ui-control.brother > .asset-layer .shield-status-container {
     margin-left: 4.3rem;
+}
+
+.ui-control.brother > .asset-layer .head2-status-container,
+.ui-control.brother > .asset-layer .body2-status-container {
+    margin-left: 0;
 }
 
 .ui-control.brother > .asset-layer .head-status-container,
@@ -20,10 +32,20 @@
     margin-top: 5.7rem;
 }
 
+.ui-control.brother > .asset-layer .head2-status-container {
+    margin-top: 0;
+}
+
+.ui-control.brother > .asset-layer .body2-status-container {
+    margin-top: 1.6rem;
+}
+
 .ui-control.brother > .asset-layer .head-status-container img,
 .ui-control.brother > .asset-layer .body-status-container img,
 .ui-control.brother > .asset-layer .weapon-status-container img,
-.ui-control.brother > .asset-layer .shield-status-container img {
+.ui-control.brother > .asset-layer .shield-status-container img,
+.ui-control.brother > .asset-layer .head2-status-container img,
+.ui-control.brother > .asset-layer .body2-status-container img {
     width: 2.5rem;
     height: 2.5rem;
     float: left;
@@ -32,7 +54,7 @@
 }
 
 .character-screen-container .inventory-list-module .filter-panel .l-button.is-armourindicators-filter {
-    left: 35.0rem;
+    left: 35rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,6 +66,3 @@
     object-fit: contain;
     display: block;
 }
-
-
-

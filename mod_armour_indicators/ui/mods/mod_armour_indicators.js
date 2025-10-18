@@ -1,7 +1,7 @@
 "use strict";
 
 // Display modes
-var ArmourIndicatorsMode = 0; // 0 = Armor, 1 = Weapon+Shield, 2 = None
+var ArmourIndicatorsMode = 0; // 0 = Head/Body Armor, 1 = Weapon/Shield, 2 = All, 3 = None
 
 // Utility function to get icon for a ratio
 function getIconForRatio(type, ratio) 
@@ -36,7 +36,7 @@ $.fn.assignStatusIcon = function(type, ratio)
         statusContainer.empty();
     }
 
-    var statusImage = $('<img/>').attr('src', getIconForRatio(type, ratio));
+    var statusImage = $('<img/>').attr('src', getIconForRatio(type.replace(/\d$/, ''), ratio));
     statusContainer.append(statusImage);
 };
 
@@ -59,29 +59,40 @@ $.fn.assignListBrotherHeadStatus   = function(ratio) { this.assignStatusIcon('he
 $.fn.assignListBrotherArmorStatus  = function(ratio) { this.assignStatusIcon('body', ratio); };
 $.fn.assignListBrotherWeaponStatus = function(ratio) { this.assignStatusIcon('weapon', ratio); };
 $.fn.assignListBrotherShieldStatus = function(ratio) { this.assignStatusIcon('shield', ratio); };
+$.fn.assignListBrotherHead2Status  = function(ratio) { this.assignStatusIcon('head2', ratio); };
+$.fn.assignListBrotherArmor2Status = function(ratio) { this.assignStatusIcon('body2', ratio); };
 
 // Remove armor status
+function removeAllStatusIcons(slot) {
+    slot.removeListBrotherHeadStatus();
+    slot.removeListBrotherArmorStatus();
+    slot.removeListBrotherWeaponStatus();
+    slot.removeListBrotherShieldStatus();
+    slot.removeListBrotherHead2Status();
+    slot.removeListBrotherArmor2Status();
+}
+
 $.fn.removeListBrotherHeadStatus   = function() { this.removeStatusIcon('head'); };
 $.fn.removeListBrotherArmorStatus  = function() { this.removeStatusIcon('body'); };
 $.fn.removeListBrotherWeaponStatus = function() { this.removeStatusIcon('weapon'); };
 $.fn.removeListBrotherShieldStatus = function() { this.removeStatusIcon('shield'); };
+$.fn.removeListBrotherHead2Status  = function() { this.removeStatusIcon('head2'); };
+$.fn.removeListBrotherArmor2Status = function() { this.removeStatusIcon('body2'); };
 
 var originalCreateListBrother = $.fn.createListBrother;
-$.fn.createListBrother = function(_brotherId, _classes) {
-
+$.fn.createListBrother = function(_brotherId, _classes) 
+{
     var result = originalCreateListBrother.apply(this, arguments);
     var assetLayer = result.find('.asset-layer');
 
     if (assetLayer.length) 
 	{
 		var containers = ['head', 'body', 'weapon', 'shield'];
-		
 		for (var i = 0; i < containers.length; i++) 
 		{
-			var type = containers[i];
-			if (!assetLayer.find('.' + type + '-status-container').length) 
+			if (!assetLayer.find('.' + containers[i] + '-status-container').length) 
 			{
-				assetLayer.append('<div class="' + type + '-status-container"></div>');
+				assetLayer.append('<div class="' + containers[i] + '-status-container"></div>');
 			}
 		}
     }
@@ -104,46 +115,70 @@ function getItemById(dataSource, itemId)
     return null;
 }
 
+function parseEquipmentCondition(item) {
+    if (item && item.amount && item.amount.indexOf('%') !== -1) {
+        return parseFloat(item.amount.replace('%', '')) / 100;
+    }
+    return null;
+}
+
+
 function updateBrotherStatusIcons(_data, result) 
 {
     var armorHead = _data.stats.armorHead;
     var armorBody = _data.stats.armorBody;
     var mainhand = _data.equipment ? _data.equipment.mainhand : null;
     var offhand = _data.equipment ? _data.equipment.offhand : null;
+	
+	removeAllStatusIcons(result);
 
     // Show status icons based on mode and condition
     if (ArmourIndicatorsMode === 0) 
 	{
         if (armorHead < _data.stats.armorHeadMax) result.assignListBrotherHeadStatus(armorHead / _data.stats.armorHeadMax);
         if (armorBody < _data.stats.armorBodyMax) result.assignListBrotherArmorStatus(armorBody / _data.stats.armorBodyMax);
-    }
 
-    if (ArmourIndicatorsMode === 1) 
+    }
+    else if (ArmourIndicatorsMode === 1) 
 	{
-        if (mainhand && mainhand.amount)
-		{
-            var repairValue = parseFloat(mainhand.amount.replace('%', '')) / 100;
-			
-            if (repairValue < 1.0) result.assignListBrotherWeaponStatus(repairValue);
-            else result.removeListBrotherWeaponStatus();
-        } 
-		else 
-		{
-            result.removeListBrotherWeaponStatus();
-        }
+		var mainhandCondition = parseEquipmentCondition(mainhand);
+		if (mainhandCondition !== null && mainhandCondition < 1.0) result.assignListBrotherWeaponStatus(mainhandCondition);
+		else result.removeListBrotherWeaponStatus();
 
-        if (offhand && offhand.amount) 
-		{
-            var repairValue = parseFloat(offhand.amount.replace('%', '')) / 100;
-			
-            if (repairValue < 1.0) result.assignListBrotherShieldStatus(repairValue);
-            else result.removeListBrotherShieldStatus();
-        } 
-		else 
-		{
-            result.removeListBrotherShieldStatus();
-        }
+		var offhandCondition = parseEquipmentCondition(offhand);
+		if (offhandCondition !== null && offhandCondition < 1.0) result.assignListBrotherShieldStatus(offhandCondition);
+		else result.removeListBrotherShieldStatus();
     }
+	else if (ArmourIndicatorsMode === 2)
+	{
+		if (armorHead < _data.stats.armorHeadMax) result.assignListBrotherHead2Status(armorHead / _data.stats.armorHeadMax);
+		if (armorBody < _data.stats.armorBodyMax) result.assignListBrotherArmor2Status(armorBody / _data.stats.armorBodyMax);
+
+		if (mainhand && mainhand.amount && mainhand.amount.indexOf('%') !== -1)
+		{
+			var mainhandCondition = parseEquipmentCondition(mainhand);;
+			if (mainhandCondition < 1.0) result.assignListBrotherWeaponStatus(mainhandCondition);
+			else result.removeListBrotherWeaponStatus();
+		}
+		else
+		{
+			result.removeListBrotherWeaponStatus();
+		}
+
+		if (offhand && offhand.amount && offhand.amount.indexOf('%') !== -1) 
+		{
+			var offhandCondition = parseEquipmentCondition(offhand);
+			if (offhandCondition < 1.0) result.assignListBrotherShieldStatus(offhandCondition);
+			else result.removeListBrotherShieldStatus();
+		}
+		else
+		{
+			result.removeListBrotherShieldStatus();
+		}
+	}
+	else if (ArmourIndicatorsMode === 3) 
+	{
+	}	
 }
 
 
@@ -171,14 +206,10 @@ CharacterScreenBrothersListModule.prototype.updateBrotherSlot = function(_data) 
     }
 
 	// Clear previous status icons before recalculating
-    slot.removeListBrotherHeadStatus();
-    slot.removeListBrotherArmorStatus();
-    slot.removeListBrotherWeaponStatus();
-    slot.removeListBrotherShieldStatus();
-
+	removeAllStatusIcons(slot);
+	
     updateBrotherStatusIcons(_data, slot);
 };
-
 
 var originalCreateDIV = CharacterScreenInventoryListModule.prototype.createDIV;
 CharacterScreenInventoryListModule.prototype.createDIV = function(_parentDiv) 
@@ -188,30 +219,128 @@ CharacterScreenInventoryListModule.prototype.createDIV = function(_parentDiv)
     var self = this;
 
     var layout = $('<div class="l-button is-armourindicators-filter"/>');
-
     this.mFilterPanel.append(layout);
-    this.mFilterArmourIndicatorsButton = layout.createImageButton(Path.GFX + 'ui/icons/icon_cycle_1.png', function () 
+	
+	function updateButtonTooltip(nextMode) 
 	{
-        var mode = self.mParent.mParent.mBrothersModule.cycleArmourIndicators();
+		var tooltipMap = [
+			'MyScreen.isArmourIndicatorsSetMode3',
+			'MyScreen.isArmourIndicatorsSetMode0',
+			'MyScreen.isArmourIndicatorsSetMode1',
+			'MyScreen.isArmourIndicatorsSetMode2'
+		];
 
-        if (mode === 0)			self.mFilterArmourIndicatorsButton.changeButtonImage(Path.GFX + 'ui/icons/icon_cycle_1.png');
-        else if (mode === 1)	self.mFilterArmourIndicatorsButton.changeButtonImage(Path.GFX + 'ui/icons/icon_cycle_2.png');
-        else					self.mFilterArmourIndicatorsButton.changeButtonImage(Path.GFX + 'ui/icons/icon_cycle_3.png');
-    }, '', 3);
+		var tooltipId = tooltipMap[nextMode];
 
-    // Bind the tooltip after button creation
-    this.mFilterArmourIndicatorsButton.bindTooltip({
-        contentType: 'msu-generic',
-        modId: 'mod_armour_indicators',  // Replace with your mod's ID
-        elementId: 'MyScreen.isArmourIndicatorsFilterButton',
-    });
+		self.mFilterArmourIndicatorsButton.bindTooltip({
+			contentType: 'msu-generic',
+			modId: 'mod_armour_indicators',
+			elementId: tooltipId
+		});
+	}
+	
+	this.mFilterArmourIndicatorsButton = layout.createImageButton(
+	
+		Path.GFX + 'ui/icons/icon_cycle_1.png',
+		function () 
+		{
+			var mode = self.mParent.mParent.mBrothersModule.cycleArmourIndicators();
+			updateButtonImage(mode);
+			updateButtonTooltip((mode + 1) % 4);
+		},
+		'',
+		3
+	);
+
+	// Set initial tooltip to next mode (since clicking cycles forward)
+	updateButtonTooltip((ArmourIndicatorsMode + 1) % 4);
+
+	var iconMap = [
+		'icon_cycle_1.png',
+		'icon_cycle_2.png',
+		'icon_cycle_3.png',
+		'icon_cycle_4.png'
+	];
+
+	function updateButtonImage(mode) 
+	{
+		var icon = iconMap[mode] || 'warning.png';
+		self.mFilterArmourIndicatorsButton.changeButtonImage(Path.GFX + 'ui/icons/' + icon);
+	}
+
+    // Hotkeys
+    function setMode(mode) {
+        if (self.mParent && self.mParent.mParent && self.mParent.mParent.mBrothersModule)
+        {
+            ArmourIndicatorsMode = mode;
+
+            var brothersList = self.mParent.mParent.mBrothersModule.mDataSource.getBrothersList();
+			
+            for (var i = 0; i < self.mParent.mParent.mBrothersModule.mSlots.length; i++) 
+			{
+                var child = self.mParent.mParent.mBrothersModule.mSlots[i].data('child');
+                if (!child) continue;
+
+                var slotId = child.data('ID');
+                if (slotId == null) continue;
+
+                var updatedData = null;
+				
+                for (var j = 0; j < brothersList.length; j++) 
+				{
+                    if (brothersList[j] && brothersList[j].id === slotId) 
+					{
+                        updatedData = brothersList[j];
+                        break;
+                    }
+                }
+
+                if (updatedData !== null) {
+				
+				
+                    child.removeListBrotherHeadStatus();
+                    child.removeListBrotherArmorStatus();
+                    child.removeListBrotherWeaponStatus();
+                    child.removeListBrotherShieldStatus();
+
+                    self.mParent.mParent.mBrothersModule.updateBrotherSlot(updatedData);
+                }
+            }
+
+            updateButtonImage(mode);
+			updateButtonTooltip((mode + 1) % 4);
+        }
+    }
+
+    $(document).off('keyup.mod_armour_indicators');
+	
+	$(document).on('keyup.mod_armour_indicators', function(event) {
+	
+		var keyModeMap = {
+			SetMode0: 0,
+			SetMode1: 1,
+			SetMode2: 2,
+			SetMode3: 3,
+			CycleArmourIndicatorsPrevious: (ArmourIndicatorsMode + 3) % 4,
+			CycleArmourIndicatorsNext: (ArmourIndicatorsMode + 1) % 4
+		};
+
+		for (var key in keyModeMap) 
+		{
+			if (MSU.Keybinds.isKeybindPressed("mod_armour_indicators", key, event)) 
+			{
+				setMode(keyModeMap[key]);
+				return false;
+			}
+		}
+	});
 };
 
 
 // New function - toggle armor damage icon visibility
 CharacterScreenBrothersListModule.prototype.cycleArmourIndicators = function ()
 {
-    ArmourIndicatorsMode = (ArmourIndicatorsMode + 1) % 3;
+    ArmourIndicatorsMode = (ArmourIndicatorsMode + 1) % 4;
 
     var brothersList = this.mDataSource.getBrothersList();
 
@@ -241,10 +370,7 @@ CharacterScreenBrothersListModule.prototype.cycleArmourIndicators = function ()
             if (updatedData !== null) 
 			{
                 // Clear previous status icons before recalculating
-                child.removeListBrotherHeadStatus();
-                child.removeListBrotherArmorStatus();
-                child.removeListBrotherWeaponStatus();
-                child.removeListBrotherShieldStatus();
+				removeAllStatusIcons(child);
 
                 // Recalculate and re-apply the armor status icons based on current data
                 this.updateBrotherSlot(updatedData);
@@ -253,3 +379,7 @@ CharacterScreenBrothersListModule.prototype.cycleArmourIndicators = function ()
     }
     return ArmourIndicatorsMode;
 };
+
+
+
+
