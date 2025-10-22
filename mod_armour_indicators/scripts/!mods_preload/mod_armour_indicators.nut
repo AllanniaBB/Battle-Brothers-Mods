@@ -1,6 +1,6 @@
 ::ArmourIndicators <- {
     ID = "mod_armour_indicators",
-    Version = "1.4.0",
+    Version = "1.4.2",
     Name = "Armour Indicators",
     BuildName = "Hotkeys + all display mode",
 	Debug = false
@@ -31,7 +31,7 @@ mod.queue(">mod_msu", function()
 	::ArmourIndicators.Mod.Keybinds.addJSKeybind("SetMode0", "shift+1", "Show Head/Body Armor icons")
 	::ArmourIndicators.Mod.Keybinds.addJSKeybind("SetMode1", "shift+2", "Show Weapon/Shield icons")
 	::ArmourIndicators.Mod.Keybinds.addJSKeybind("SetMode2", "shift+3", "Show all icons")
-	::ArmourIndicators.Mod.Keybinds.addJSKeybind("SetMode3", "shift+4", "No icons")
+	::ArmourIndicators.Mod.Keybinds.addJSKeybind("SetMode3", "shift+4", "Show no icons")
 
 	// Tooltip for new button
 	::ArmourIndicators.Mod.Tooltips.setTooltips({
@@ -42,6 +42,5 @@ mod.queue(">mod_msu", function()
 			isArmourIndicatorsSetMode3	= ::MSU.Class.BasicTooltip("Equipment Damage Icons",	"Shows coloured icons indicating current equipment condition.\nCurrent setting: None\nNext setting: Head/Body Armour"),
 		}
 	});
-
 
 });
