@@ -28,6 +28,9 @@ var WorldObituaryScreen = function(_parent)
 
     // selected entry
     this.mSelectedEntry = null;
+	
+	// dynamic checkboxes
+	this.mCreatedCheckboxes = [];
 };
 
 WorldObituaryScreen.prototype.isConnected = function ()
@@ -60,6 +63,110 @@ WorldObituaryScreen.prototype.getModules = function ()
 	return [];
 };
 
+WorldObituaryScreen.prototype.updateStatPositions = function ()
+{
+	var statOrder = this.getStatOrder();
+	var statClasses = ['hptext', 'fttext', 'brtext', 'ittext', 'matext', 'ratext', 'mdtext', 'rdtext'];
+
+	// For each visible row
+	this.mListScrollContainer.children('.l-row').each(function () 
+	{
+		for (var i = 0; i < statClasses.length; i++) 
+		{
+			var statClass = statClasses[i];
+			var statElement = $(this).find('.' + statClass);
+			
+			if (statElement.length > 0) 
+			{
+				var newIndex = statOrder[i];
+				var leftRem = 119 + (newIndex * 7.2);
+				statElement[0].style.setProperty('left', leftRem + 'rem', 'important');
+			}
+		}
+	});
+};
+
+WorldObituaryScreen.prototype.reloadList = function ()
+{
+	if (!this.mLastData) return;
+
+	this.mListScrollContainer.empty();
+
+	for (var i = 0; i < this.mLastData.Fallen.length; ++i)
+	{
+		this.addListEntry(this.mLastData.Fallen[i]);
+	}
+
+	this.CreateStatHeader();
+	this.updateStatPositions();
+
+	if (MSU.getSettingValue("mod_better_obituary", "SwapPerks"))
+	{
+		$('.trait-group, .perminjury-group, .table-header-traits, .table-header-perminjuries').hide();
+		$('.perk-group, .table-header-perks').show();
+	}
+	else
+	{
+		$('.perk-group, .table-header-perks').hide();
+		$('.trait-group, .perminjury-group, .table-header-traits, .table-header-perminjuries').show();
+	}
+};
+
+WorldObituaryScreen.prototype.createToggleCheckbox = function(settingKey, labelText, onToggleCallback)
+{
+	var self = this;
+
+	var container = $('<div class="setting-container boolean-container"/>').css({'margin-bottom': '0.3rem'});
+	this.mCreatedCheckboxes.push(container);
+	this.mDialogContainer.append(container);
+
+	var titleContainer = $('<div class="setting-title-container"/>');
+	container.append(titleContainer);
+
+	var id = 'mod_better_obituary_' + settingKey + '-id';
+	var checkbox = $('<input type="checkbox" id="' + id + '" name="' + settingKey + '-name" />');
+
+	titleContainer.append(checkbox);
+
+	checkbox.iCheck({
+		checkboxClass: 'icheckbox_flat-orange',
+		radioClass: 'iradio_flat-orange',
+		increaseArea: '30%'
+	});
+
+	var currentValue = MSU.getSettingValue("mod_better_obituary", settingKey);
+	checkbox.iCheck(currentValue ? 'check' : 'uncheck');
+
+	var label = $('<label class="bool-checkbox-label title-font-small font-color-title obituary-checkbox-label" for="' + id + '">' + labelText + '</label>');
+	
+	label.click(function(){
+		checkbox.iCheck('toggle');
+	});
+	
+	titleContainer.append(label);
+
+	// Bind Tooltip to label
+	label.bindTooltip({
+		contentType: 'ui-element',
+		elementId: "world-screen.obituary." + settingKey.toLowerCase()
+	});
+
+	// Handle checkbox change
+	checkbox.on('ifChecked ifUnchecked', function (event) 
+	{
+		var newValue = event.type === 'ifChecked';
+		MSU.setSettingValue("mod_better_obituary", settingKey, newValue);
+
+		if (typeof onToggleCallback === 'function') 
+		{
+			onToggleCallback.call(self, newValue);
+		}
+	});
+
+	return container;
+};
+
+
 WorldObituaryScreen.prototype.createDIV = function (_parentDiv)
 {
     var self = this;
@@ -76,6 +183,55 @@ WorldObituaryScreen.prototype.createDIV = function (_parentDiv)
     // create tabs
     var tabButtonsContainer = $('<div class="l-tab-container"/>');
     this.mDialogContainer.findDialogTabContainer().append(tabButtonsContainer);
+	
+	var checkboxBar = $('<div class="obituary-checkbox-bar" />');
+	this.mDialogContainer.findDialogHeaderContainer().append(checkboxBar);
+	
+	// Swap Perks / Traits
+	this.mTogglePerksCheckbox = this.createToggleCheckbox(
+		'SwapPerks',
+		'Show Perks',
+		function (newValue) 
+		{
+			var $perkElements  = $('.perk-group, .table-header-perks');
+			var $traitElements = $('.trait-group, .perminjury-group, .table-header-traits, .table-header-perminjuries');
+
+			if (newValue) 
+			{
+				$traitElements.hide();
+				$perkElements.show();
+			} 
+			else 
+			{
+				$perkElements.hide();
+				$traitElements.show();
+			}
+		}
+	);
+	checkboxBar.append(this.mTogglePerksCheckbox);
+
+	// Swap Stat Display
+	this.mToggleStatsCheckbox = this.createToggleCheckbox(
+		'SwapStats',
+		'Swap Stat Order',
+		function () 
+		{
+			this.CreateStatHeader();
+			this.updateStatPositions();
+		}
+	);
+	checkboxBar.append(this.mToggleStatsCheckbox);
+
+	// Swap Stacked Stars
+	this.mToggleStarsCheckbox = this.createToggleCheckbox(
+		'StackedStars',
+		'Stacked Stars',
+		function () 
+		{
+			this.reloadList();
+		}
+	);
+	checkboxBar.append(this.mToggleStarsCheckbox);
 
     // create content
     var content = this.mDialogContainer.findDialogContentContainer();
@@ -115,6 +271,9 @@ WorldObituaryScreen.prototype.createDIV = function (_parentDiv)
 		<img class="header-icon" src="' + Path.GFX + 'ui/icons/days_wounded.png' + '"></div>');
 	headers.append(this.mPermInjuries);
 
+	this.mPerks = $('<div class="table-header-perks title title-font-big font-bold font-color-title">Perks</div>');
+	headers.append(this.mPerks);
+	
 	this.mHP = $('<div class="table-header-hp">\
 		<img class="header-icon" src="' + Path.GFX + Asset.ICON_HEALTH + '"></div>');
 	headers.append(this.mHP);
@@ -168,6 +327,48 @@ WorldObituaryScreen.prototype.createDIV = function (_parentDiv)
     }, '', 1);
 
     this.mIsVisible = false;
+	
+    $(document).off('keyup.mod_better_obituary');
+
+	$(document).on('keyup.mod_better_obituary', function(event) 
+	{
+		// Toggle Perks Keybind
+		if (MSU.Keybinds.isKeybindPressed("mod_better_obituary", "toggle_perks", event))
+		{
+			self.mTogglePerksCheckbox.find('input').iCheck('toggle');
+			return false;
+		}
+
+		// Toggle Stacked Stars Keybind
+		else if (MSU.Keybinds.isKeybindPressed("mod_better_obituary", "stacked_talent_stars", event))
+		{
+			self.mToggleStarsCheckbox.find('input').iCheck('toggle');
+			return false;
+		}
+
+		// Toggle Stat Order Keybind
+		else if (MSU.Keybinds.isKeybindPressed("mod_better_obituary", "toggle_stat_order", event))
+		{
+			self.mToggleStatsCheckbox.find('input').iCheck('toggle');
+			return false;
+		}
+	});
+
+};
+
+WorldObituaryScreen.prototype.destroyCheckboxes = function () 
+{
+	if (!this.mCreatedCheckboxes) return;
+
+	for (var i = 0; i < this.mCreatedCheckboxes.length; ++i) 
+	{
+		var container = this.mCreatedCheckboxes[i];
+		container.find('label').unbindTooltip();
+		container.find('input').iCheck('destroy');
+		container.remove();
+	}
+
+	this.mCreatedCheckboxes = [];
 };
 
 
@@ -191,6 +392,14 @@ WorldObituaryScreen.prototype.destroyDIV = function ()
     this.mContainer.empty();
     this.mContainer.remove();
     this.mContainer = null;
+	
+	this.destroyCheckboxes();
+	
+	this.mTogglePerksCheckbox = null;
+	this.mToggleStatsCheckbox = null;
+	this.mToggleStarsCheckbox = null;
+
+	$(document).off('keyup.mod_better_obituary');
 };
 
 WorldObituaryScreen.prototype.getStatOrder = function ()
@@ -211,16 +420,41 @@ WorldObituaryScreen.prototype.CreateStatHeader = function ()
         'table-header-ma', 'table-header-ra', 'table-header-md', 'table-header-rd'
     ];
 
-    for (var i = 0; i < headerMap.length; i++) {
+    for (var i = 0; i < headerMap.length; i++) 
+	{
         var className = headerMap[i];
         var selector = '.world-obituary-screen > .l-obituary-dialog-container .table-header .' + className;
         var element = document.querySelector(selector);
-        if (element) {
+        if (element) 
+		{
             var newIndex = statOrder[i];
             var leftRem = 119 + (newIndex * 7.2) + 1;
             element.style.setProperty('left', leftRem + 'rem', 'important');
         }
     }
+};
+
+WorldObituaryScreen.prototype.createIconGroup = function (items, className, count)
+{
+	var group = $('<div class="' + className + '"></div>');
+
+	for (var i = 0; i < count; i++) 
+	{
+		var item = items[i];
+		
+		if (item) 
+		{
+			var img = $('<img/>').attr('src', Path.GFX + (item.icon || item));
+			if (item.icon && item.id) 
+			{
+				img.attr('id', item.id);
+				img.bindTooltip({ contentType: 'ui-element', elementId: item.id });
+			}
+			group.append(img);
+		}
+	}
+
+	return group;
 };
 
 WorldObituaryScreen.prototype.addListEntry = function (_data)
@@ -238,90 +472,47 @@ WorldObituaryScreen.prototype.addListEntry = function (_data)
     {
         result.append($('<div class="level text-font-normal font-color-description">' + _data.level + '</div>'));
 
-        // Stat header
-        this.CreateStatHeader();
+        // Traits (First entry is background)
+        var show_num_traits = MSU.getSettingValue("mod_better_obituary", "show_num_traits");
+		result.append(this.createIconGroup(_data.traits, 'trait-group', show_num_traits));
 
-        var statsLabels = ['hptext', 'fttext', 'brtext', 'ittext', 'matext', 'ratext', 'mdtext', 'rdtext'];
-        var TalentStackedStars = MSU.getSettingValue("mod_better_obituary", "StackedStars");
-        var statOrder = this.getStatOrder();
-        var talentPrefix = TalentStackedStars ? 'BO_stacked_talent_' : 'BO_talent_';
+        // Permanent Injuries
+        var show_num_perminjuries = MSU.getSettingValue("mod_better_obituary", "show_num_perminjuries");
+		result.append(this.createIconGroup(_data.perminjuries, 'perminjury-group', show_num_perminjuries));
 
-        var statWidth = !TalentStackedStars ? '6.5rem' : '';
-        var iconWidth = !TalentStackedStars ? '3.6rem' : '';
+        // Perks
+        var show_num_perks = MSU.getSettingValue("mod_better_obituary", "show_num_perks");
+		var perksGroup = this.createIconGroup(_data.perks, 'perk-group', show_num_perks);
+		
+		perksGroup.hide(); // Initially hidden as Perks replace Traits/Injuries when toggled in settings.
+        result.append(perksGroup);
+		
+		// Stats
+		var statsLabels = ['hptext', 'fttext', 'brtext', 'ittext', 'matext', 'ratext', 'mdtext', 'rdtext'];
+		var TalentStackedStars = MSU.getSettingValue("mod_better_obituary", "StackedStars");
+		var statOrder = this.getStatOrder();
+		var talentPrefix = TalentStackedStars ? 'BO_stacked_talent_' : 'BO_talent_';
 
-        for (var i = 0; i < statsLabels.length; i++) 
-        {
-            var statClass = statsLabels[i];
-            var statValue = _data.stats[i];
-            var talentIndex = _data.talents[i];
+		var statWidth = !TalentStackedStars ? '6.5rem' : '5.5rem';
+		var iconWidth = !TalentStackedStars ? '3.6rem' : '';
 
-            var statDiv = $('<div class="' + statClass + ' text-font-normal font-color-description">').append(statValue);
+		for (var i = 0; i < statOrder.length; i++) 
+		{
+			var index = statOrder[i];
+			var statClass = statsLabels[index];
+			var statValue = _data.stats[index];
+			var talentIndex = _data.talents[index];
 
-            if (!TalentStackedStars) {
-                statDiv[0].style.setProperty('width', statWidth, 'important');
-            }
+			var statDiv = $('<div class="' + statClass + ' text-font-normal font-color-description">').append(statValue);
+			var talentstar = $('<img/>').attr('src', Path.GFX + 'ui/icons/' + talentPrefix + talentIndex + '.png');
 
-            var star = $('<img/>').attr('src', Path.GFX + 'ui/icons/' + talentPrefix + talentIndex + '.png');
-            if (!TalentStackedStars) {
-                star[0].style.setProperty('width', iconWidth, 'important');
-            }
-            statDiv.append(star);
+			statDiv.append(talentstar);
 
-            var leftRem = 119 + (statOrder[i] * 7.2);
-            statDiv[0].style.setProperty('left', leftRem + 'rem', 'important');
+			var leftRem = 119 + (i * 7.2);
+			statDiv[0].style.setProperty('left', leftRem + 'rem', 'important');
 
-            result.append(statDiv);
-        }
-
-        // Traits
-        var show_traits = MSU.getSettingValue("mod_better_obituary", "show_traits");
-        var traitsGroup = $('<div class="trait-group"></div>');
-        for (var i = 0; i < show_traits; i++)
-        {
-            var trait = _data.traits[i];
-            if (trait) 
-            {
-                if (trait.icon && trait.id) 
-                {
-                    var img = $('<img/>')
-                        .attr('src', Path.GFX + trait.icon)
-                        .attr('id', trait.id);
-                    traitsGroup.append(img);
-                    img.bindTooltip({ contentType: 'ui-element', elementId: trait.id });
-                } 
-                else 
-                {
-                    traitsGroup.append($('<img/>').attr('src', Path.GFX + trait));
-                }
-            }
-        }
-        result.append(traitsGroup);
-
-        // Perm Injuries
-        var show_perminjuries = MSU.getSettingValue("mod_better_obituary", "show_perminjuries");
-        var perminjuryGroup = $('<div class="perminjury-group"></div>');
-        for (var i = 0; i < show_perminjuries; i++) 
-        {
-            var injury = _data.perminjuries[i];
-            if (injury) 
-            {
-                if (injury.icon && injury.id) 
-                {
-                    var img = $('<img/>')
-                        .attr('src', Path.GFX + injury.icon)
-                        .attr('id', injury.id);
-                    perminjuryGroup.append(img);
-                    img.bindTooltip({ contentType: 'ui-element', elementId: injury.id });
-                } 
-                else 
-                {
-                    perminjuryGroup.append($('<img/>').attr('src', Path.GFX + injury));
-                }
-            }
-        }
-        result.append(perminjuryGroup);
-
-        // TODO: Perks (need to regig Ui to fit)
+			result.append(statDiv);
+		}
     }
 };
 
@@ -336,6 +527,7 @@ WorldObituaryScreen.prototype.bindTooltips = function ()
 	this.mLevel.bindTooltip({ contentType: 'ui-element', elementId: 'world-screen.obituary.Level' });
 	this.mTraits.bindTooltip({ contentType: 'ui-element', elementId: 'world-screen.obituary.Traits' });
 	this.mPermInjuries.bindTooltip({ contentType: 'ui-element', elementId: 'world-screen.obituary.PermInjuries' });
+	this.mPerks.bindTooltip({ contentType: 'ui-element', elementId: 'world-screen.obituary.Perks' });
 	this.mHP.bindTooltip({ contentType: 'ui-element', elementId: 'world-screen.obituary.HP' });
 	this.mFT.bindTooltip({ contentType: 'ui-element', elementId: 'world-screen.obituary.FT' });
 	this.mBR.bindTooltip({ contentType: 'ui-element', elementId: 'world-screen.obituary.BR' });
@@ -356,6 +548,7 @@ WorldObituaryScreen.prototype.unbindTooltips = function ()
 	this.mLevel.unbindTooltip();
 	this.mTraits.unbindTooltip();
 	this.mPermInjuries.unbindTooltip();
+	this.mPerks.unbindTooltip();
 	this.mHP.unbindTooltip();
 	this.mFT.unbindTooltip();
 	this.mBR.unbindTooltip();
@@ -364,6 +557,7 @@ WorldObituaryScreen.prototype.unbindTooltips = function ()
 	this.mRA.unbindTooltip();
 	this.mMD.unbindTooltip();
 	this.mRD.unbindTooltip();
+
 };
 
 
@@ -419,6 +613,22 @@ WorldObituaryScreen.prototype.isRegistered = function ()
     return false;
 };
 
+WorldObituaryScreen.prototype.syncCheckboxStates = function()
+{
+	var settings = [
+		{ key: 'SwapPerks', checkbox: this.mTogglePerksCheckbox },
+		{ key: 'SwapStats', checkbox: this.mToggleStatsCheckbox },
+		{ key: 'StackedStars', checkbox: this.mToggleStarsCheckbox }
+	];
+
+	for (var i = 0; i < settings.length; i++)
+	{
+		var setting = settings[i];
+		var input = setting.checkbox.find('input[type="checkbox"]');
+		var value = MSU.getSettingValue("mod_better_obituary", setting.key);
+		input.iCheck(value ? 'check' : 'uncheck');
+	}
+};
 
 WorldObituaryScreen.prototype.show = function (_data)
 {
@@ -463,6 +673,21 @@ WorldObituaryScreen.prototype.show = function (_data)
 			});
 		}
 	}
+
+	this.syncCheckboxStates();
+	
+	this.updateStatPositions();
+	
+    this.mContainer.removeClass('display-none').addClass('display-block');
+
+    // Check MSU setting to hide/show the checkboxes
+    var shouldHide = MSU.getSettingValue("mod_better_obituary", "HideObituarySetting");
+
+    if (this.mTogglePerksCheckbox)  this.mTogglePerksCheckbox.css('display', shouldHide ? 'none' : 'block');
+    if (this.mToggleStatsCheckbox)  this.mToggleStatsCheckbox.css('display', shouldHide ? 'none' : 'block');
+    if (this.mToggleStarsCheckbox)  this.mToggleStarsCheckbox.css('display', shouldHide ? 'none' : 'block');
+
+    this.notifyBackendOnShown();
 };
 
 WorldObituaryScreen.prototype.hide = function (_withSlideAnimation)
@@ -525,6 +750,8 @@ WorldObituaryScreen.prototype.loadFromData = function (_data)
     {
         return;
     }
+	
+	this.mLastData = _data;
 
     this.mListScrollContainer.empty();
 
@@ -538,6 +765,20 @@ WorldObituaryScreen.prototype.loadFromData = function (_data)
 	for(var i = 0; i < _data.Fallen.length; ++i)
     {
 		this.addListEntry(_data.Fallen[i]);
+    }
+	
+	// Stat header
+	this.CreateStatHeader();
+	
+    var $traitElements = $('.trait-group, .perminjury-group, .table-header-traits, .table-header-perminjuries');
+    var $perkElements = $('.perk-group, .table-header-perks');
+
+    if (MSU.getSettingValue("mod_better_obituary", "SwapPerks")) {
+        $traitElements.hide();
+        $perkElements.show();
+    } else {
+        $perkElements.hide();
+        $traitElements.show();
     }
 };
 

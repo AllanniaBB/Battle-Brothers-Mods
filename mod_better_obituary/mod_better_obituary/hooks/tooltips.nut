@@ -3,13 +3,14 @@
 	local original_onQueryUIElementTooltipData = o.onQueryUIElementTooltipData;
 
 	// Arena trait have getActor in getTooltip, so bypass with hardcoded data
-	function getArenaTraitTooltip(_elementId, skill)
+	function BuildTooltip(_elementId, skill)
 	{
 		local title = skill.getName();
 		local descr = skill.getDescription();
 		local bonus1 = null;
 		local bonus2 = null;
 
+		// Arena traits specific
 		if (_elementId.find("veteran") != null)
 		{
 			bonus1 = {
@@ -52,12 +53,24 @@
 		return result;
 	}
 
+	function getColoredKeybindText(_keybindId)
+	{
+		local hex = ::BetterObituary.Mod.ModSettings.getSetting("hotkey_text_colour").getValueAsHexString();
+		local hexWithoutAlpha = hex.slice(0, 6); // Strip 'ff' alpha
+		local textHexColour = "#" + hexWithoutAlpha;
+
+		local colouredText = "[color=" + textHexColour + "]" + ::BetterObituary.Mod.Keybinds.getKeybind(_keybindId).getKeyCombinationsCapitalized() + "[/color]";
+
+		return colouredText;
+	}
+
 	function getObituaryStatTooltip(_elementId)
 	{
 		local tooltipMap = {
 			"world-screen.obituary.Level": ["Level", "The level the character was upon meeting their fate."],
 			"world-screen.obituary.Traits": ["Traits", "The background and traits the character had upon meeting their fate."],
 			"world-screen.obituary.PermInjuries": ["Permanent Injuries", "The permanent injuries the character had upon meeting their fate."],
+			"world-screen.obituary.Perks": ["Perks", "The perks the character had upon meeting their fate."],
 			"world-screen.obituary.HP": ["Hitpoints", "The base hitpoints the character had upon meeting their fate."],
 			"world-screen.obituary.FT": ["Fatigue", "The base fatigue the character had upon meeting their fate."],
 			"world-screen.obituary.BR": ["Resolve", "The base resolve the character had upon meeting their fate."],
@@ -65,7 +78,10 @@
 			"world-screen.obituary.MA": ["Melee Skill", "The base melee skill the character had upon meeting their fate."],
 			"world-screen.obituary.RA": ["Ranged Skill", "The base ranged skill the character had upon meeting their fate."],
 			"world-screen.obituary.MD": ["Melee Defense", "The base melee defense the character had upon meeting their fate."],
-			"world-screen.obituary.RD": ["Ranged Defense", "The base ranged defense the character had upon meeting their fate."]
+			"world-screen.obituary.RD": ["Ranged Defense", "The base ranged defense the character had upon meeting their fate."],
+			"world-screen.obituary.swapperks": ["Show Perks", "Swap the trait/permanent injuries columns for perks.\nHotkey: " + getColoredKeybindText("toggle_perks")],
+			"world-screen.obituary.swapstats": ["Swap Stat Order", "Swaps the position of first 4 stats (hp, fatigue, initiative, bravery) with the last 4 (attack / defense).\nHotkey: " + getColoredKeybindText("toggle_stat_order")],
+			"world-screen.obituary.stackedstars": ["Stacked Talent Stars", "Replace the 3 star talent icon (row of 3) with a triangle of stars.\nHotkey: " + getColoredKeybindText("stacked_talent_stars")]
 		};
 
 		if (_elementId in tooltipMap)
@@ -103,9 +119,10 @@
 		}
 
 		// Arena traits manual override - they have getActor in getTooltip
-		if (_elementId.find("arena") != null)
+		// Not all perks have getTooltip, so build manually.
+		if (_elementId.find("arena") != null || _elementId.find("perk") != null)
 		{
-			return getArenaTraitTooltip(_elementId, skill);
+			return BuildTooltip(_elementId, skill);
 		}
 
 		if ("getTooltip" in skill)

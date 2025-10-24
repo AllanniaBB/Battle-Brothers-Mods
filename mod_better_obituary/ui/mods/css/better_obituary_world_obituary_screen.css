@@ -67,6 +67,7 @@ img.header-icon {
 .world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-level        { position: absolute; top: 0; left: 82.8rem; }
 .world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-traits       { position: absolute; top: 0; left: 88.2rem; }
 .world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-perminjuries { position: absolute; top: 0; left: 113rem; }
+.world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-perks        { position: absolute; top: 0; left: 88.2rem; }
 .world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-hp           { position: absolute; top: 0; left: calc(119rem + 0 * 7.2rem + 1rem); }
 .world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-ft           { position: absolute; top: 0; left: calc(119rem + 1 * 7.2rem + 1rem); }
 .world-obituary-screen > .l-obituary-dialog-container .table-header .table-header-br           { position: absolute; top: 0; left: calc(119rem + 2 * 7.2rem + 1rem); }
@@ -94,29 +95,21 @@ img.header-icon {
 .world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .killed-by	{ left: 45.8rem; }
 .world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row .level		{ left: 81.7rem; }
 
-.trait-group, .perminjury-group {
+.trait-group, .perminjury-group, .perk-group {
     position: absolute;
     top: 0;
     height: 2.6rem;
     display: flex;
     align-items: center;
-	//background: rgba(255, 165, 0, 0.5);  // Debug colouring (orange)
-}
-
-.trait-group, .perminjury-group {
-    position: absolute;
-    top: 0;
-    left: 87rem;
-    height: 2.6rem;
-    display: flex;
-    align-items: center;
+	left: 87rem;
 	//background: rgba(255, 165, 0, 0.5);  // Debug colouring (orange)
 }
 
 .trait-group      { width: calc(0.5rem + (2.6 + 0.1) * 8rem); left: 87rem; justify-content: left;}
 .perminjury-group { width: calc((2.6 + 0.1) * 3rem); left: calc(87rem + 1.2rem + (2.6 + 0.1) * 8rem); justify-content: center;}
-
-.trait-group img, .perminjury-group img {
+.perk-group		  { width: calc(0.5rem + (2.6 + 0.1) * 11rem); align-items: left; }
+    
+.trait-group img, .perminjury-group img, .perk-group img {
     width: 2.6rem;
     height: 2.6rem;
     object-fit: contain;
@@ -135,19 +128,19 @@ img.header-icon {
 .hptext, .fttext, .brtext, .ittext, .matext, .ratext, .mdtext, .rdtext {
     position: absolute;
     top: 0;
-    width: 6.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
     text-align: right;
+	width: 6.5rem;
     //background: rgba(0, 0, 255, 0.5);    // Debug colouring (blue)
 }
 
 /* stat icons */
 .world-obituary-screen > .l-obituary-dialog-container .content .scroll-container .l-row
 .hptext img, .fttext img, .brtext img, .ittext img, .matext img, .ratext img, .mdtext img, .rdtext img {
-    width: 2.6rem;
+    width: 3.6rem;
     height: 2.6rem;
     object-fit: contain;
     flex-shrink: 0;
@@ -155,11 +148,38 @@ img.header-icon {
 }
 
 /* stat text */
-.hptext { width: 5.5rem; left: calc(119rem + 0 * 7.2rem); }
-.fttext { width: 5.5rem; left: calc(119rem + 1 * 7.2rem); }
-.brtext { width: 5.5rem; left: calc(119rem + 2 * 7.2rem); }
-.ittext { width: 5.5rem; left: calc(119rem + 3 * 7.2rem); }
-.matext { width: 5.5rem; left: calc(119rem + 4 * 7.2rem); }
-.ratext { width: 5.5rem; left: calc(119rem + 5 * 7.2rem); }
-.mdtext { width: 5.5rem; left: calc(119rem + 6 * 7.2rem); }
-.rdtext { width: 5.5rem; left: calc(119rem + 7 * 7.2rem); }
+.hptext { left: calc(119rem + 0 * 7.2rem); }
+.fttext { left: calc(119rem + 1 * 7.2rem); }
+.brtext { left: calc(119rem + 2 * 7.2rem); }
+.ittext { left: calc(119rem + 3 * 7.2rem); }
+.matext { left: calc(119rem + 4 * 7.2rem); }
+.ratext { left: calc(119rem + 5 * 7.2rem); }
+.mdtext { left: calc(119rem + 6 * 7.2rem); }
+.rdtext { left: calc(119rem + 7 * 7.2rem); }
+
+.obituary-checkbox-bar {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    z-index: 11;
+}
+
+.obituary-checkbox-bar .setting-container {
+    margin: 0;
+}
+
+.obituary-checkbox-bar .setting-title-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.obituary-checkbox-bar input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.obituary-checkbox-label{
+	padding-left: 0.8rem;
+}

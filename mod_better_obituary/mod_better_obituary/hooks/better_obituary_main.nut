@@ -143,7 +143,7 @@
 		{		
 			if(s.isType(this.Const.SkillType.PermanentInjury))
 			{
-			if(::BetterObituary.Debug) ::logInfo("Better Obituary: getDeadPermanentInjury = " + i + " -> Name: " + s.m.Name + " -> Type: " + s.getType());;
+			if(::BetterObituary.Debug) ::logInfo("Better Obituary: getDeadPermanentInjury = " + i + " -> Name: " + s.m.Name + " -> Type: " + s.getType());
 			
 				local injury_data = {
 					"id": ::IO.scriptFilenameByHash(s.ClassNameHash),
@@ -155,7 +155,23 @@
 
 		return list_perminjuries;
 	};
-	
+
+	/* Test for potentially adding extra information, such as identifying friendly fire deaths
+	local getObituaryInfo = o.getObituaryInfo;
+	o.getObituaryInfo = function(_skill, _killer, _fatalityType)
+	{
+		local fallen = getObituaryInfo(_skill, _killer, _fatalityType);
+
+		if (_killer != null && _killer.isPlayerControlled != null && _killer.isPlayerControlled())
+		{
+			if(_killer.isGuest())	fallen.KilledBy += " (Guest)";
+			else					fallen.KilledBy += " (Bro)";
+		}
+
+		return fallen;
+	};
+	*/
+
 	local onDeath = o.onDeath;
 	o.onDeath <- function(_killer, _skill, _tile, _fatalityType) 
 	{
@@ -171,7 +187,7 @@
 		::World.Statistics.addFallen = function(_fallen) 
 		{
 			originalAddFallen(bro.finalizeFallen(_fallen));
-		}
+		}		
 
 		onDeath(_killer, _skill, _tile, _fatalityType);
 			
