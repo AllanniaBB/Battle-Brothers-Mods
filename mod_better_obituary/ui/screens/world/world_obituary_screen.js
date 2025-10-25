@@ -250,12 +250,12 @@ WorldObituaryScreen.prototype.createDIV = function (_parentDiv)
 
     //this.mColumnBattles = $('<div class="table-header-battles title title-font-big font-bold font-color-title">Battles</div>');
 	this.mColumnBattles = $('<div class="table-header-battles title title-font-big font-bold font-color-title">\
-    <img class="header-icon" src="' + Path.GFX + 'ui/icons/obituary_battles.png"></div>');
+    <img class="header-icon" src="' + Path.GFX + 'ui/icons/shield_damage.png"></div>');
     headers.append(this.mColumnBattles);
 
     //this.mColumnKills = $('<div class="table-header-kills title title-font-big font-bold font-color-title">Kills</div>');
 	this.mColumnKills = $('<div class="table-header-kills">\
-    <img class="header-icon" src="' + Path.GFX + 'ui/icons/obituary_kills.png"></div>');
+    <img class="header-icon" src="' + Path.GFX + 'ui/icons/miniboss.png"></div>');
     headers.append(this.mColumnKills);
 
     this.mColumnKilledBy = $('<div class="table-header-killed-by title title-font-big font-bold font-color-title">Fate</div>');
@@ -491,7 +491,6 @@ WorldObituaryScreen.prototype.addListEntry = function (_data)
 		var statsLabels = ['hptext', 'fttext', 'brtext', 'ittext', 'matext', 'ratext', 'mdtext', 'rdtext'];
 		var TalentStackedStars = MSU.getSettingValue("mod_better_obituary", "StackedStars");
 		var statOrder = this.getStatOrder();
-		var talentPrefix = TalentStackedStars ? 'BO_stacked_talent_' : 'BO_talent_';
 
 		var statWidth = !TalentStackedStars ? '6.5rem' : '5.5rem';
 		var iconWidth = !TalentStackedStars ? '3.6rem' : '';
@@ -502,6 +501,9 @@ WorldObituaryScreen.prototype.addListEntry = function (_data)
 			var statClass = statsLabels[index];
 			var statValue = _data.stats[index];
 			var talentIndex = _data.talents[index];
+			
+			// Use stacked 3 star icon instad if setting enabled
+			var talentPrefix = (TalentStackedStars && talentIndex === 3) ? 'stacked_talent_' : 'talent_';
 
 			var statDiv = $('<div class="' + statClass + ' text-font-normal font-color-description">').append(statValue);
 			var talentstar = $('<img/>').attr('src', Path.GFX + 'ui/icons/' + talentPrefix + talentIndex + '.png');
